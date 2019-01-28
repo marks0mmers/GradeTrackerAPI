@@ -63,13 +63,13 @@ export class UserServiceImpl implements UserService {
 
     private toUserDto(user: User): UserDatabaseDTO {
         return {
-            firstName: user.getFirstName,
-            lastName: user.getLastName,
-            email: user.getEmail,
-            hash: user.getHash,
-            salt: user.getSalt,
-            isAdmin: user.getIsAdmin,
-            _id: user.getId
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            hash: user.hash,
+            salt: user.salt,
+            isAdmin: user.isAdmin,
+            _id: user.id
         };
     }
 

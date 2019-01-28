@@ -47,7 +47,7 @@ export class CourseControllerImpl implements CourseController {
         }
         try {
             const courses = await this.courseService.getCourses()
-                .then((values: Course[]) => values.filter((value: Course) => user.getIsAdmin || value.getUserId === user.getId));
+                .then((values: Course[]) => values.filter((value: Course) => user.isAdmin || value.userId === user.id));
             res.json(courses);
         } catch (err) {
             next(err);
@@ -74,7 +74,7 @@ export class CourseControllerImpl implements CourseController {
             req.body.description,
             req.body.section,
             req.body.creditHours,
-            user.getId
+            user.id
         );
         try {
             const createdCourse = await this.courseService.createCourse(course);
@@ -121,7 +121,7 @@ export class CourseControllerImpl implements CourseController {
         } catch (err) {
             next(err);
         }
-        if (loggedIn.getIsAdmin) {
+        if (loggedIn.isAdmin) {
             const courses = await this.courseService.getCoursesByUser(userId);
             res.json(courses);
         } else {

@@ -28,7 +28,7 @@ export class CourseServiceImpl implements CourseService {
     public async getCoursesByUser(id: string): Promise<Course[]> {
         return await this.courseRepository.findAll().then((c: CourseDTO[]) => {
             return c.map((course: CourseDTO) => this.toCourse(course))
-                .filter((course: Course) => course.getUserId === id);
+                .filter((course: Course) => course.userId === id);
         });
     }
 
@@ -58,12 +58,12 @@ export class CourseServiceImpl implements CourseService {
 
     private toCourseDTO(course: Course): CourseDTO {
         return {
-            title: course.getTitle,
-            description: course.getDescription,
-            section: course.getSection,
-            creditHours: course.getCreditHours,
-            userId: course.getUserId,
-            _id: course.getId
+            title: course.title,
+            description: course.description,
+            section: course.section,
+            creditHours: course.creditHours,
+            userId: course.userId,
+            _id: course.id
         };
     }
 

@@ -53,7 +53,7 @@ export class UserControllerImpl implements UserController {
         try {
             const { payload: { id } } = req;
             const currentUser = await this.userService.getUser(id);
-            if (currentUser.getIsAdmin) {
+            if (currentUser.isAdmin) {
                 const retUser = await this.userService.getUser(req.params.userId);
                 res.json(retUser.toJSON());
             } else {
@@ -67,7 +67,7 @@ export class UserControllerImpl implements UserController {
     public async getUsers(req: UserRequest, res: Response, next: NextFunction) {
         try {
             const currentUser = await this.userService.getUser(req.payload.id);
-            if (currentUser.getIsAdmin) {
+            if (currentUser.isAdmin) {
                 const users = await this.userService.getUsers();
                 res.json(users.map((user) => user.toJSON()));
             } else {

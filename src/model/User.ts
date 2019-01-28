@@ -5,42 +5,14 @@ import { UserDTO } from "../schema/UserSchema";
 export class User {
 
     constructor(
-        private firstName: string,
-        private lastName: string,
-        private email: string,
-        private salt: string,
-        private hash: string,
-        private isAdmin: boolean,
-        private id?: string
+        public firstName: string,
+        public lastName: string,
+        public email: string,
+        public salt: string,
+        public hash: string,
+        public isAdmin: boolean,
+        public id?: string
     ) {}
-
-    get getFirstName() {
-        return this.firstName;
-    }
-
-    get getLastName() {
-        return this.lastName;
-    }
-
-    get getEmail() {
-        return this.email;
-    }
-
-    get getSalt() {
-        return this.salt;
-    }
-
-    get getHash() {
-        return this.hash;
-    }
-
-    get getIsAdmin() {
-        return this.isAdmin;
-    }
-
-    get getId() {
-        return this.id;
-    }
 
     public setPassword(password: string) {
         this.salt = randomBytes(16).toString("hex");
