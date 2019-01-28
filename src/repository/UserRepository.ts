@@ -3,7 +3,8 @@ import { userDatabase, UserDatabaseDTO } from "../schema/UserSchema";
 
 export interface UserRepository {
     newUser(user: UserDatabaseDTO): Promise<UserDatabaseDTO>;
-    current(id: string): Promise<UserDatabaseDTO>;
+    getUser(id: string): Promise<UserDatabaseDTO>;
+    getUsers(): Promise<UserDatabaseDTO[]>;
 }
 
 @injectable()
@@ -13,8 +14,13 @@ export class UserRepositoryImpl implements UserRepository {
         return await userDatabase.connect().then(() => userDatabase.Users.create(user));
     }
 
-    public async current(id: string): Promise<UserDatabaseDTO> {
+    public async getUser(id: string): Promise<UserDatabaseDTO> {
         return await userDatabase.connect().then(() => userDatabase.Users.findOne(id));
+    }
+
+    public async getUsers(): Promise<UserDatabaseDTO[]> {
+        const userDtos = await userDatabase.connect().then(() => userDatabase.Users.find());
+        return userDtos.toArray();
     }
 
 }

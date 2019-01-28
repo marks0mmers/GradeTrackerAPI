@@ -13,6 +13,7 @@ export interface CourseController {
     newCourse(req: UserRequest, res: Response, next: NextFunction): void;
     updateCourse(req: UserRequest, res: Response, next: NextFunction): void;
     deleteCourse(req: UserRequest, res: Response, next: NextFunction): void;
+    getCoursesByUser(req: UserRequest, res: Response, next: NextFunction): void;
 }
 
 @injectable()
@@ -30,6 +31,7 @@ export class CourseControllerImpl implements CourseController {
         this.userService = userService;
 
         this.getAllCourses = this.getAllCourses.bind(this);
+        this.getCoursesByUser = this.getCoursesByUser.bind(this);
         this.getCourse = this.getCourse.bind(this);
         this.newCourse = this.newCourse.bind(this);
         this.updateCourse = this.updateCourse.bind(this);
@@ -39,7 +41,7 @@ export class CourseControllerImpl implements CourseController {
     public async getAllCourses(req: UserRequest, res: Response, next: NextFunction) {
         let user: User;
         try {
-            user = await this.userService.currentUser(req.payload.id);
+            user = await this.userService.getUser(req.payload.id);
         } catch (err) {
             next(err);
         }
@@ -62,7 +64,7 @@ export class CourseControllerImpl implements CourseController {
     public async newCourse(req: UserRequest, res: Response, next: NextFunction) {
         let user: User;
         try {
-            user = await this.userService.currentUser(req.payload.id);
+            user = await this.userService.getUser(req.payload.id);
         } catch (err) {
             next(err);
         }
@@ -108,6 +110,22 @@ export class CourseControllerImpl implements CourseController {
             }
         } catch (err) {
             next(err);
+        }
+    }
+
+    public async getCoursesByUser(req: UserRequest, res: Response, next: NextFunction) {
+        const { userId } = req.params;
+        let loggedIn: User;
+        try {
+            loggedIn = await this.userService.getUser(req.payload.id);
+        } catch (err) {
+            next(err);
+        }
+        if (loggedIn.getIsAdmin) {
+            const courses = await this.courseService.getCoursesByUser(userId);
+            res.json(courses);
+        } else {
+            res.status(401).json({message: "You are not allowed to perform this action"});
         }
     }
 

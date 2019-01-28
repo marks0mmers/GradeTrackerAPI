@@ -75,4 +75,14 @@ export class User {
         };
     }
 
+    public toJSON() {
+        return {
+            _id: this.id,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            isAdmin: this.isAdmin
+        };
+    }
+
 }

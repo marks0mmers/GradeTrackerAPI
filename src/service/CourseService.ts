@@ -10,6 +10,7 @@ export interface CourseService {
     createCourse(course: Course): Promise<Course>;
     updateCourse(course: Course): Promise<Course>;
     deleteCourse(id: string): Promise<string>;
+    getCoursesByUser(id: string): Promise<Course[]>;
 }
 
 @injectable()
@@ -22,6 +23,13 @@ export class CourseServiceImpl implements CourseService {
         return await this.courseRepository.findAll().then((c: CourseDTO[]) => c.map((course: CourseDTO) => {
             return this.toCourse(course);
         }));
+    }
+
+    public async getCoursesByUser(id: string): Promise<Course[]> {
+        return await this.courseRepository.findAll().then((c: CourseDTO[]) => {
+            return c.map((course: CourseDTO) => this.toCourse(course))
+                .filter((course: Course) => course.getUserId === id);
+        });
     }
 
     public async getCourse(id: string): Promise<Course> {

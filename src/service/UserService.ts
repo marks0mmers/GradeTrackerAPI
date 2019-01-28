@@ -10,7 +10,8 @@ import { LoginDTO, NewUserDTO, UserDatabaseDTO, UserDTO } from "../schema/UserSc
 export interface UserService {
     newUser(user: NewUserDTO): Promise<User>;
     login(req: Request, res: Response, next: NextFunction): any;
-    currentUser(id: string): Promise<User>;
+    getUsers(): Promise<User[]>;
+    getUser(id: string): Promise<User>;
 }
 
 @injectable()
@@ -48,10 +49,16 @@ export class UserServiceImpl implements UserService {
         })(req, res, next);
     }
 
-    public async currentUser(id: string): Promise<User> {
-        return await this.userRepository.current(id).then((u: UserDatabaseDTO) => {
+    public async getUser(id: string): Promise<User> {
+        return await this.userRepository.getUser(id).then((u: UserDatabaseDTO) => {
             return this.toUser(u);
         });
+    }
+
+    public async getUsers(): Promise<User[]> {
+        return await this.userRepository.getUsers().then((users: UserDatabaseDTO[]) => users.map((u: UserDatabaseDTO) => {
+            return this.toUser(u);
+        }));
     }
 
     private toUserDto(user: User): UserDatabaseDTO {

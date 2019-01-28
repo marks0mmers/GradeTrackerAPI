@@ -16,6 +16,7 @@ export class UserRoute implements RegistrableRoute {
 
     public register(app: Application): void {
         app.route("/users")
+        .get(auth.required, this.userController.getUsers)
         .post(auth.optional, this.userController.newUser);
 
         app.route("/users/login")
@@ -23,5 +24,8 @@ export class UserRoute implements RegistrableRoute {
 
         app.route("/users/current")
         .get(auth.required, this.userController.current);
+
+        app.route("/users/:userId")
+        .get(auth.required, this.userController.getUser);
     }
 }

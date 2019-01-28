@@ -19,6 +19,9 @@ export class CourseRoute implements RegistrableRoute {
         .get(auth.required, this.courseController.getCourse)
         .put(auth.required, this.courseController.updateCourse)
         .delete(auth.required, this.courseController.deleteCourse);
+
+        app.route("/courses/user/:userId")
+        .get(auth.required, this.courseController.getCoursesByUser);
     }
 
 }

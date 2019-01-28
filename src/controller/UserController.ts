@@ -8,6 +8,8 @@ export interface UserController {
     newUser(req: Request, res: Response, next: NextFunction): void;
     login(req: Request, res: Response, next: NextFunction): void;
     current(req: Request, res: Response, next: NextFunction): void;
+    getUser(req: Request, res: Response, next: NextFunction): void;
+    getUsers(req: Request, res: Response, next: NextFunction): void;
 }
 
 @injectable()
@@ -20,6 +22,8 @@ export class UserControllerImpl implements UserController {
         this.newUser = this.newUser.bind(this);
         this.login = this.login.bind(this);
         this.current = this.current.bind(this);
+        this.getUser = this.getUser.bind(this);
+        this.getUsers = this.getUsers.bind(this);
     }
 
     public async newUser(req: Request, res: Response, next: NextFunction) {
@@ -38,8 +42,37 @@ export class UserControllerImpl implements UserController {
     public async current(req: UserRequest, res: Response, next: NextFunction) {
         try {
             const { payload: { id } } = req;
-            const user = await this.userService.currentUser(id);
+            const user = await this.userService.getUser(id);
             res.json(user.toAuthJSON());
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    public async getUser(req: UserRequest, res: Response, next: NextFunction) {
+        try {
+            const { payload: { id } } = req;
+            const currentUser = await this.userService.getUser(id);
+            if (currentUser.getIsAdmin) {
+                const retUser = await this.userService.getUser(req.params.userId);
+                res.json(retUser.toJSON());
+            } else {
+                res.status(401).json({message: "You are not authorized to access this user"});
+            }
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    public async getUsers(req: UserRequest, res: Response, next: NextFunction) {
+        try {
+            const currentUser = await this.userService.getUser(req.payload.id);
+            if (currentUser.getIsAdmin) {
+                const users = await this.userService.getUsers();
+                res.json(users.map((user) => user.toJSON()));
+            } else {
+                res.status(401).json({message: "You are not authorized to access this user"});
+            }
         } catch (err) {
             next(err);
         }
