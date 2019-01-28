@@ -36,7 +36,7 @@ export class CourseRepositoryImpl implements CourseRepository {
 
         const saved = await dto.save((err: Error, c: CourseDTO) => {
             if (err) {
-                logger.error("Error updating address: " + err);
+                logger.error("Error updating course: " + err);
                 throw err;
             }
             return c;

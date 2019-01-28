@@ -7,7 +7,11 @@ const TYPES = {
 
     UserController: Symbol("UserController"),
     UserRepository: Symbol("UserRepository"),
-    UserService: Symbol("UserService")
+    UserService: Symbol("UserService"),
+
+    GradeCategoryController: Symbol("GradeCategoryController"),
+    GradeCategoryRepository: Symbol("GradeCategoryRepository"),
+    GradeCategoryService: Symbol("GradeCategoryService")
 };
 
 export default TYPES;

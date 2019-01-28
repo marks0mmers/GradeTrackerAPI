@@ -89,6 +89,7 @@ export class CourseControllerImpl implements CourseController {
             req.body.description,
             req.body.section,
             req.body.creditHours,
+            req.payload.id,
             req.params.id
         );
 
