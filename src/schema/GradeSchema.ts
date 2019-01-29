@@ -3,7 +3,8 @@ import { Collection, Core, Index, Instance, Model, ObjectID, Property } from "ir
 export interface GradeDTO {
     _id?: string;
     name: string;
-    grade: string;
+    grade: number;
+    gradeCategoryId: string;
 }
 
 @Index({name: 1})
@@ -17,7 +18,10 @@ export class GradeMongoSchema extends Instance<GradeDTO, GradeMongoSchema> {
     public name: string;
 
     @Property(Number, true)
-    public grade: string;
+    public grade: number;
+
+    @Property(String, true)
+    public gradeCategoryId: string;
 }
 
 // tslint:disable-next-line:max-classes-per-file

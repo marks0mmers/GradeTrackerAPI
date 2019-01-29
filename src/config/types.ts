@@ -11,7 +11,11 @@ const TYPES = {
 
     GradeCategoryController: Symbol("GradeCategoryController"),
     GradeCategoryRepository: Symbol("GradeCategoryRepository"),
-    GradeCategoryService: Symbol("GradeCategoryService")
+    GradeCategoryService: Symbol("GradeCategoryService"),
+
+    GradeController: Symbol("GradeController"),
+    GradeRepository: Symbol("GradeRepository"),
+    GradeService: Symbol("GradeService")
 };
 
 export default TYPES;
