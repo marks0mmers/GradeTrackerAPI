@@ -1,4 +1,5 @@
-import { Collection, Core, Index, Instance, Model, ObjectID, Property } from "iridium";
+import { Document, model, Schema } from "mongoose";
+import { connection } from "..";
 
 export interface UserDTO {
     _id?: string;
@@ -9,8 +10,8 @@ export interface UserDTO {
     isAdmin: boolean;
 }
 
-export interface UserDatabaseDTO {
-    _id?: string;
+export interface UserDatabaseDTO extends Document {
+    _id: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -32,36 +33,31 @@ export interface LoginDTO {
     password: string;
 }
 
-@Index({name: 1})
-@Collection("users")
-export class UserMongoSchema extends Instance<UserDatabaseDTO, UserMongoSchema> {
+const userSchema = new Schema({
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    hash: {
+        type: String,
+        required: true
+    },
+    salt: {
+        type: String,
+        required: true
+    },
+    isAdmin: {
+        type: Boolean,
+        required: true
+    }
+});
 
-    @ObjectID
-    // tslint:disable-next-line:variable-name
-    public _id?: string;
-
-    @Property(String, true)
-    public firstName: string;
-
-    @Property(String, true)
-    public lastName: string;
-
-    @Property(String, true)
-    public email: string;
-
-    @Property(String)
-    public hash: string;
-
-    @Property(String)
-    public salt: string;
-
-    @Property(Boolean, true)
-    public isAdmin: boolean;
-}
-
-// tslint:disable-next-line:max-classes-per-file
-class UserDatabase extends Core {
-    public Users = new Model<UserDatabaseDTO, UserMongoSchema>(this, UserMongoSchema);
-}
-
-export const userDatabase = new UserDatabase({database: "grade_tracker"});
+export const userDatabase = model<UserDatabaseDTO>("users", userSchema);

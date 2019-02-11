@@ -15,12 +15,12 @@ export const authError = (err, req, res: Response, next) => {
 
 export const auth = {
     required: jwt({
-        secret: "secret",
+        secret: process.env.SECRET || "secret",
         userProperty: "payload",
         getToken: getTokenFromHeaders
     }),
     optional: jwt({
-        secret: "secret",
+        secret: process.env.SECRET || "secret",
         userProperty: "payload",
         getToken: getTokenFromHeaders,
         credentialsRequired: false

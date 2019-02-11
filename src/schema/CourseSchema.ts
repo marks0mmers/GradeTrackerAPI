@@ -1,7 +1,8 @@
-import { Collection, Core, Index, Instance, Model, ObjectID, Property } from "iridium";
+import { Document, model, Schema } from "mongoose";
+import { connection } from "..";
 
-export interface CourseDTO {
-    _id?: string;
+export interface CourseDTO extends Document {
+    _id: string;
     title: string;
     description: string;
     section: number;
@@ -9,34 +10,27 @@ export interface CourseDTO {
     userId: string;
 }
 
-@Index({name: 1})
-@Collection("courses")
-export class CourseMongoSchema extends Instance<CourseDTO, CourseMongoSchema> implements CourseDTO {
+const courseSchema = new Schema<CourseDTO>({
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    section: {
+        type: Number,
+        required: true
+    },
+    creditHours: {
+        type: Number,
+        required: true
+    },
+    userId: {
+        type: String,
+        required: true
+    }
+});
 
-    @ObjectID
-    // tslint:disable-next-line:variable-name
-    public _id?: string;
-
-    @Property(String, true)
-    public title: string;
-
-    @Property(String, true)
-    public description: string;
-
-    @Property(Number, true)
-    public section: number;
-
-    @Property(Number, true)
-    public creditHours: number;
-
-    @Property(String, true)
-    public userId: string;
-
-}
-
-// tslint:disable-next-line:max-classes-per-file
-class CourseDatabase extends Core {
-    public Courses = new Model<CourseDTO, CourseMongoSchema>(this, CourseMongoSchema);
-}
-
-export const courseDatabase = new CourseDatabase({database: "grade_tracker"});
+export const courseDatabase = model<CourseDTO>("courses", courseSchema);

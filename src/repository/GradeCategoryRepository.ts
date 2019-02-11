@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { gradeCategoryDatabase, GradeCategoryDTO, GradeCategoryMongoSchema } from "../schema/GradeCategorySchema";
+import { gradeCategoryDatabase, GradeCategoryDTO } from "../schema/GradeCategorySchema";
 import logger from "../util/Logger";
 
 export interface GradeCategoryRepository {
@@ -14,21 +14,19 @@ export interface GradeCategoryRepository {
 export class GradeCategoryRepositoryImpl implements GradeCategoryRepository {
 
     public async findAll(): Promise<GradeCategoryDTO[]> {
-        const gradeCategoryDTOs = await gradeCategoryDatabase.connect().then(() => gradeCategoryDatabase.GradeCategories.find());
-        return gradeCategoryDTOs.toArray();
+        return await gradeCategoryDatabase.find();
     }
 
     public async find(id: string): Promise<GradeCategoryDTO> {
-        return await gradeCategoryDatabase.connect().then(() => gradeCategoryDatabase.GradeCategories.findOne(id));
+        return await gradeCategoryDatabase.findById(id);
     }
 
     public async create(gradeCategoryDTO: GradeCategoryDTO): Promise<GradeCategoryDTO> {
-        return await gradeCategoryDatabase.connect().then(() => gradeCategoryDatabase.GradeCategories.create(gradeCategoryDTO));
+        return await gradeCategoryDatabase.create(gradeCategoryDTO);
     }
 
     public async update(gradeCategoryDTO: GradeCategoryDTO): Promise<GradeCategoryDTO> {
-        const dto: GradeCategoryMongoSchema = await gradeCategoryDatabase.connect()
-            .then(() => gradeCategoryDatabase.GradeCategories.findOne(gradeCategoryDTO._id));
+        const dto = await gradeCategoryDatabase.findById(gradeCategoryDTO._id);
 
         dto.title = gradeCategoryDTO.title;
         dto.percentage = gradeCategoryDTO.percentage;
@@ -52,9 +50,8 @@ export class GradeCategoryRepositoryImpl implements GradeCategoryRepository {
     }
 
     public async delete(id: string): Promise<string> {
-        return await gradeCategoryDatabase.connect().then(() => gradeCategoryDatabase.GradeCategories.remove({_id: id})).then((numberOfDeleted: number ) => {
-            return numberOfDeleted > 0 ? "Grade Category Successfully Deleted" : "Grade Category Doesn't Exist";
-        });
+        const deleted =  await gradeCategoryDatabase.findByIdAndRemove(id);
+        return deleted ? "Grade Category Successfully Deleted" : "Grade Category Doesn't Exist";
     }
 
 }

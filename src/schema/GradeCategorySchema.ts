@@ -1,7 +1,7 @@
-import { Collection, Core, Index, Instance, Model, ObjectID, Property } from "iridium";
+import { Document, model, Schema } from "mongoose";
 
-export interface GradeCategoryDTO {
-    _id?: string;
+export interface GradeCategoryDTO extends Document {
+    _id: string;
     title: string;
     percentage: number;
     numberOfGrades: number;
@@ -13,46 +13,43 @@ export interface GradeCategoryDTO {
     courseId: string;
 }
 
-@Index({name: 1})
-@Collection("grade-categories")
-export class GradeCategoryMongoSchema extends Instance<GradeCategoryDTO, GradeCategoryMongoSchema> implements GradeCategoryDTO {
+const gradeCategorySchema = new Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    percentage: {
+        type: Number,
+        required: true
+    },
+    numberOfGrades: {
+        type: Number,
+        required: true
+    },
+    remainingGrades: {
+        type: Number,
+        required: false
+    },
+    currentAverage: {
+        type: Number,
+        required: false
+    },
+    guarenteedAverage: {
+        type: Number,
+        required: true
+    },
+    potentialAverage: {
+        type: Number,
+        required: true
+    },
+    userId: {
+        type: String,
+        required: true
+    },
+    courseId: {
+        type: String,
+        required: true
+    }
+});
 
-    @ObjectID
-    // tslint:disable-next-line:variable-name
-    public _id?: string;
-
-    @Property(String, true)
-    public title: string;
-
-    @Property(Number, true)
-    public percentage: number;
-
-    @Property(Number, true)
-    public numberOfGrades: number;
-
-    @Property(Number, false)
-    public remainingGrades?: number;
-
-    @Property(Number, false)
-    public currentAverage?: number;
-
-    @Property(Number, false)
-    public guarenteedAverage?: number;
-
-    @Property(Number, false)
-    public potentialAverage?: number;
-
-    @Property(String, true)
-    public userId: string;
-
-    @Property(String, true)
-    public courseId: string;
-
-}
-
-// tslint:disable-next-line: max-classes-per-file
-class GradeCategoryDatabase extends Core {
-    public GradeCategories = new Model<GradeCategoryDTO, GradeCategoryMongoSchema>(this, GradeCategoryMongoSchema);
-}
-
-export const gradeCategoryDatabase = new GradeCategoryDatabase({database: "grade_tracker"});
+export const gradeCategoryDatabase = model<GradeCategoryDTO>("grade-categories", gradeCategorySchema);

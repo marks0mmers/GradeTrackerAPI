@@ -11,16 +11,15 @@ export interface UserRepository {
 export class UserRepositoryImpl implements UserRepository {
 
     public async newUser(user: UserDatabaseDTO): Promise<UserDatabaseDTO> {
-        return await userDatabase.connect().then(() => userDatabase.Users.create(user));
+        return await userDatabase.create(user);
     }
 
     public async getUser(id: string): Promise<UserDatabaseDTO> {
-        return await userDatabase.connect().then(() => userDatabase.Users.findOne(id));
+        return await userDatabase.findById(id);
     }
 
     public async getUsers(): Promise<UserDatabaseDTO[]> {
-        const userDtos = await userDatabase.connect().then(() => userDatabase.Users.find());
-        return userDtos.toArray();
+        return await userDatabase.find();
     }
 
 }

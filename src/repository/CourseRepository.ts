@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { courseDatabase, CourseDTO, CourseMongoSchema } from "../schema/CourseSchema";
+import { courseDatabase, CourseDTO } from "../schema/CourseSchema";
 import logger from "../util/Logger";
 
 export interface CourseRepository {
@@ -14,20 +14,19 @@ export interface CourseRepository {
 export class CourseRepositoryImpl implements CourseRepository {
 
     public async findAll(): Promise<CourseDTO[]> {
-        const courseDTOs = await courseDatabase.connect().then(() => courseDatabase.Courses.find());
-        return courseDTOs.toArray();
+        return await courseDatabase.find();
     }
 
     public async find(id: string): Promise<CourseDTO> {
-        return await courseDatabase.connect().then(() => courseDatabase.Courses.findOne(id));
+        return await courseDatabase.findById(id);
     }
 
     public async create(courseDTO: CourseDTO): Promise<CourseDTO> {
-        return await courseDatabase.connect().then(() => courseDatabase.Courses.create(courseDTO));
+        return await courseDatabase.create(courseDTO);
     }
 
     public async update(courseDTO: CourseDTO): Promise<CourseDTO> {
-        const dto: CourseMongoSchema = await courseDatabase.connect().then(() => courseDatabase.Courses.findOne(courseDTO._id));
+        const dto = await courseDatabase.findById(courseDTO._id);
 
         dto.title = courseDTO.title;
         dto.description = courseDTO.description;
@@ -46,9 +45,8 @@ export class CourseRepositoryImpl implements CourseRepository {
     }
 
     public async delete(courseId: string): Promise<string> {
-        return await courseDatabase.connect().then(() => courseDatabase.Courses.remove({_id: courseId})).then((numberOfDeleted: number) => {
-            return numberOfDeleted > 0 ? "Course Successfully Deleted" : "Course doesn't exist";
-        });
+        const numberOfDeleted =  await courseDatabase.findByIdAndRemove({_id: courseId});
+        return numberOfDeleted ? "Course Successfully Deleted" : "Course doesn't exist";
     }
 
 }
