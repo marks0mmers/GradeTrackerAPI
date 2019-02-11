@@ -61,7 +61,7 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "client", "build")));
 // Right before your app.listen(), add this:
-app.get("*", (req: express.Request, res: express.Response) => {
+app.get("/*", (req: express.Request, res: express.Response) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
