@@ -10,7 +10,7 @@ import morgan = require("morgan");
 import path = require("path");
 import container from "./config/inversify.config";
 import TYPES from "./config/types";
-import { RegistrableRoute } from "./Route/RegistrableRoute";
+import { RegistrableRoute } from "./route/RegistrableRoute";
 import logger from "./util/Logger";
 
 const app: express.Application = express();
