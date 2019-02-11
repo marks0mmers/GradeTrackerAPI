@@ -1,6 +1,19 @@
 import { Document, model, Schema } from "mongoose";
 
-export interface GradeCategoryDTO extends Document {
+export interface GradeCategoryDTO {
+    _id: string;
+    title: string;
+    percentage: number;
+    numberOfGrades: number;
+    remainingGrades?: number;
+    currentAverage?: number;
+    guarenteedAverage?: number;
+    potentialAverage?: number;
+    userId: string;
+    courseId: string;
+}
+
+export interface GradeCategoryDocument extends Document {
     _id: string;
     title: string;
     percentage: number;
@@ -52,4 +65,4 @@ const gradeCategorySchema = new Schema({
     }
 });
 
-export const gradeCategoryDatabase = model<GradeCategoryDTO>("grade-categories", gradeCategorySchema);
+export const gradeCategoryDatabase = model<GradeCategoryDocument>("grade-categories", gradeCategorySchema);

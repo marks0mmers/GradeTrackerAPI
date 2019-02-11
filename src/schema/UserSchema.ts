@@ -10,7 +10,17 @@ export interface UserDTO {
     isAdmin: boolean;
 }
 
-export interface UserDatabaseDTO extends Document {
+export interface UserDatabaseDTO {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    hash: string;
+    salt: string;
+    isAdmin: boolean;
+}
+
+export interface UserDatabaseDocument extends Document {
     _id: string;
     firstName: string;
     lastName: string;
@@ -60,4 +70,4 @@ const userSchema = new Schema({
     }
 });
 
-export const userDatabase = model<UserDatabaseDTO>("users", userSchema);
+export const userDatabase = model<UserDatabaseDocument>("users", userSchema);

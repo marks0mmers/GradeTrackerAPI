@@ -1,7 +1,16 @@
 import { Document, model, Schema } from "mongoose";
 import { connection } from "..";
 
-export interface CourseDTO extends Document {
+export interface CourseDTO {
+    _id: string;
+    title: string;
+    description: string;
+    section: number;
+    creditHours: number;
+    userId: string;
+}
+
+export interface CourseDocument extends Document {
     _id: string;
     title: string;
     description: string;
@@ -33,4 +42,4 @@ const courseSchema = new Schema<CourseDTO>({
     }
 });
 
-export const courseDatabase = model<CourseDTO>("courses", courseSchema);
+export const courseDatabase = model<CourseDocument>("courses", courseSchema);

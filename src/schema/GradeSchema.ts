@@ -1,6 +1,13 @@
 import { Document, model, Schema } from "mongoose";
 
-export interface GradeDTO extends Document {
+export interface GradeDTO {
+    _id: string;
+    name: string;
+    grade: number;
+    gradeCategoryId: string;
+}
+
+export interface GradeDocument extends Document {
     _id: string;
     name: string;
     grade: number;
@@ -22,4 +29,4 @@ const gradeSchema = new Schema({
     }
 });
 
-export const gradeDatabase = model<GradeDTO>("grades", gradeSchema);
+export const gradeDatabase = model<GradeDocument>("grades", gradeSchema);
