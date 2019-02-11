@@ -8,11 +8,11 @@ import { CourseRepository, CourseRepositoryImpl } from "../repository/CourseRepo
 import { GradeCategoryRepository, GradeCategoryRepositoryImpl } from "../repository/GradeCategoryRepository";
 import { GradeRepository, GradeRepositoryImpl } from "../repository/GradeRepository";
 import { UserRepository, UserRepositoryImpl } from "../repository/UserRepository";
-import { CourseRoute } from "../Route/CourseRoute";
+import { CourseRoute } from "../route/CourseRoute";
 import { GradeCategoryRoute } from "../route/GradeCategoryRoute";
 import { GradeRoute } from "../route/GradeRoute";
-import { RegistrableRoute } from "../Route/RegistrableRoute";
-import { UserRoute } from "../Route/UserRoute";
+import { RegistrableRoute } from "../route/RegistrableRoute";
+import { UserRoute } from "../route/UserRoute";
 import { CourseService, CourseServiceImpl } from "../service/CourseService";
 import { GradeCategoryService, GradeCategoryServiceImpl } from "../service/GradeCategoryService";
 import { GradeService, GradeServiceImpl } from "../service/GradeService";
