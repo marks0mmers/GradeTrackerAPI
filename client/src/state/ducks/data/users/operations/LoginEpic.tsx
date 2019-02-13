@@ -23,7 +23,7 @@ export const LoginEpic = (
         ofType(types.LOGIN),
         mergeMap((action: Login) => {
             return ajax.post(
-                "/users/login",
+                "/api/users/login",
                 action.user,
                 generateHeaders(),
             ).pipe(
