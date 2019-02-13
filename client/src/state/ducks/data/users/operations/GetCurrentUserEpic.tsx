@@ -23,7 +23,7 @@ export const GetCurrentUserEpic = (
         ofType(types.GET_CURRENT_USER),
         mergeMap((action: GetCurrentUser) => {
             return ajax.get(
-                "/users/current",
+                "/api/users/current",
                 generateAuthHeaders(),
             ).pipe(
                 map((res: AjaxResponse) => {

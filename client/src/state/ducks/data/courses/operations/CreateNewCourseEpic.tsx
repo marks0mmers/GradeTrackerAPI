@@ -18,7 +18,7 @@ export const CreateNewCourseEpic = (
         ofType(types.CREATE_NEW_COURSE),
         mergeMap((action: CreateNewCourse) => {
             return ajax.post(
-                "/courses",
+                "/api/courses",
                 action.course.toJS(),
                 generateAuthHeaders(),
             ).pipe(

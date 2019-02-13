@@ -24,7 +24,7 @@ export const CreateNewUserEpic = (
         ofType(types.CREATE_NEW_USER),
         mergeMap((action: CreateNewUser) => {
             return ajax.post(
-                "/users",
+                "/api/users",
                 action.user.toJS(),
                 generateHeaders(),
             ).pipe(

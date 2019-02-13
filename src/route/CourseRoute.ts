@@ -11,16 +11,16 @@ export class CourseRoute implements RegistrableRoute {
     private courseController: CourseController;
 
     public register(app: Application): void {
-        app.route("/courses")
+        app.route("/api/courses")
         .get(auth.required, this.courseController.getAllCourses)
         .post(auth.required, this.courseController.newCourse);
 
-        app.route("/courses/:id")
+        app.route("/api/courses/:id")
         .get(auth.required, this.courseController.getCourse)
         .put(auth.required, this.courseController.updateCourse)
         .delete(auth.required, this.courseController.deleteCourse);
 
-        app.route("/courses/user/:userId")
+        app.route("/api/courses/user/:userId")
         .get(auth.required, this.courseController.getCoursesByUser);
     }
 

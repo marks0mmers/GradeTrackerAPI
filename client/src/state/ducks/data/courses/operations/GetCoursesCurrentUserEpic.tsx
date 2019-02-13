@@ -20,7 +20,7 @@ export const GetCoursesCurrentUserEpic = (
         mergeMap((action: GetCoursesCurrentUser) => {
             const { currentUser } = state$.value.data.user;
             return ajax.get(
-                `/courses/user/${currentUser && currentUser.id}`,
+                `/api/courses/user/${currentUser && currentUser.id}`,
                 generateAuthHeaders(),
             ).pipe(
                 map((res: AjaxResponse) => {

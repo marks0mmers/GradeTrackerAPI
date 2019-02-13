@@ -15,17 +15,17 @@ export class UserRoute implements RegistrableRoute {
     }
 
     public register(app: Application): void {
-        app.route("/users")
+        app.route("/api/users")
         .get(auth.required, this.userController.getUsers)
         .post(auth.optional, this.userController.newUser);
 
-        app.route("/users/login")
+        app.route("/api/users/login")
         .post(auth.optional, this.userController.login);
 
-        app.route("/users/current")
+        app.route("/api/users/current")
         .get(auth.required, this.userController.current);
 
-        app.route("/users/:userId")
+        app.route("/api/users/:userId")
         .get(auth.required, this.userController.getUser);
     }
 }
