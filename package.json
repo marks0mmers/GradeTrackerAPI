@@ -14,7 +14,7 @@
     "prod": "NODE_ENV=production node_modules/.bin/ts-node src/index.ts",
     "lint": "node_modules/.bin/tslint 'src/**/*.ts' -t verbose --force",
     "test": "node_modules/.bin/ts-node node_modules/.bin/tape './test/**/*.spec.ts' | tap-spec",
-    "heroku-postbuild": "echo Skip build on Heroku"
+    "heroku-postbuild": "yarn prod"
   },
   "author": "Mark Sommers",
   "license": "MIT",
