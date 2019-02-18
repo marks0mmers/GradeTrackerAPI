@@ -59,13 +59,13 @@ app.use(
     })
 );
 
-app.use(express.static(path.join(__dirname, "client", "build")));
-// Right before your app.listen(), add this:
-app.get("/*", (req: express.Request, res: express.Response) => {
-    // tslint:disable-next-line:no-console
-    console.log(req);
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-});
+// app.use(express.static(path.join(__dirname, "client", "build")));
+// // Right before your app.listen(), add this:
+// app.get("/*", (req: express.Request, res: express.Response) => {
+//     // tslint:disable-next-line:no-console
+//     console.log(req);
+//     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+// });
 
 // Listen on port 8000 for calls
 app.listen(process.env.PORT || 8000, () => {
