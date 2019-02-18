@@ -4,10 +4,10 @@ import { Observable } from "rxjs";
 import "rxjs/add/observable/of";
 import { ajax, AjaxResponse } from "rxjs/internal-compatibility";
 import { catchError, map, mergeMap } from "rxjs/operators";
-import { User } from "src/models/User";
-import { RootState } from "src/state/rootReducer";
+import { User } from "../../../../../models/User";
 import { generateHeaders } from "../../../../../util/GenerateHeaders";
 import { Toast } from "../../../../../util/Toast";
+import { RootState } from "../../../../rootReducer";
 import {
     CreateNewUser,
     CreateNewUserSuccessCreator,

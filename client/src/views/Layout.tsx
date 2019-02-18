@@ -5,12 +5,12 @@ import { connect } from "react-redux";
 import { Route, Switch } from "react-router";
 import { ToastContainer } from "react-toastify";
 import { bindActionCreators, Dispatch } from "redux";
-import { User } from "src/models/User";
-import { getCurrentUser } from "src/state/ducks/data/users/selectors";
 import styled from "styled-components";
 import { Theme } from "../models/Theme";
+import { User } from "../models/User";
 import { getActiveCourse } from "../state/ducks/control/courses";
 import { GetCurrentUserCreator, LogoutCreator } from "../state/ducks/data/users";
+import { getCurrentUser } from "../state/ducks/data/users/selectors";
 import {
     getThemes,
     SetActiveThemeCreator,

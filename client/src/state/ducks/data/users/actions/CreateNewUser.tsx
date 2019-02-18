@@ -1,4 +1,4 @@
-import { User } from "src/models/User";
+import { User } from "../../../../../models/User";
 import { UserDataActionTypes as types } from "./types";
 
 export interface CreateNewUser {

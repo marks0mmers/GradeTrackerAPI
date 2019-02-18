@@ -1,7 +1,7 @@
 import { Map } from "immutable";
 import * as React from "react";
-import { Grade } from "src/models/Grade";
 import styled from "styled-components";
+import { Grade } from "../../../models/Grade";
 import { GradeCategory } from "../../../models/GradeCategory";
 import Button from "../../controls/button/package/Button";
 import { ListControlElement } from "../../controls/list-control/models/ListControlElement";

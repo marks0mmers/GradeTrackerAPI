@@ -1,8 +1,8 @@
 import { Map } from "immutable";
 import * as React from "react";
-import { LoginUser, User } from "src/models/User";
-import { CreateNewUserCreator, LoginCreator } from "src/state/ducks/data/users";
 import styled from "styled-components";
+import { LoginUser, User } from "../../models/User";
+import { CreateNewUserCreator, LoginCreator } from "../../state/ducks/data/users";
 import Input from "../components/styled-inputs/Input";
 import Button from "../controls/button/package/Button";
 

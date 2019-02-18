@@ -1,9 +1,9 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import { User } from "src/models/User";
-import { getCurrentUser } from "src/state/ducks/data/users/selectors";
+import { User } from "../../models/User";
 import { CreateNewUserCreator, LoginCreator } from "../../state/ducks/data/users";
+import { getCurrentUser } from "../../state/ducks/data/users/selectors";
 import { RootState } from "../../state/rootReducer";
 import LoginContent from "../content/LoginContent";
 

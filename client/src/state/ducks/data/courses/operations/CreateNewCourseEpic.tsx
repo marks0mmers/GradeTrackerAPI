@@ -1,5 +1,6 @@
 import { ofType, StateObservable } from "redux-observable";
 import { Observable } from "rxjs";
+import "rxjs/add/observable/of";
 import { AjaxResponse } from "rxjs/internal-compatibility";
 import { ajax } from "rxjs/observable/dom/ajax";
 import { catchError, map, mergeMap } from "rxjs/operators";

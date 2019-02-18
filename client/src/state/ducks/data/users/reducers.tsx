@@ -1,5 +1,5 @@
 import { Record } from "immutable";
-import { User } from "src/models/User";
+import { User } from "../../../../models/User";
 import { Toast } from "../../../../util/Toast";
 import { UserDataActions, UserDataActionTypes as types } from "./actions";
 
