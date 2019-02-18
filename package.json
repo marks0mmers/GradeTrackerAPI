@@ -13,7 +13,8 @@
     "build": "cd client && yarn install && yarn build",
     "prod": "NODE_ENV=production node_modules/.bin/ts-node src/index.ts",
     "lint": "node_modules/.bin/tslint 'src/**/*.ts' -t verbose --force",
-    "test": "node_modules/.bin/ts-node node_modules/.bin/tape './test/**/*.spec.ts' | tap-spec"
+    "test": "node_modules/.bin/ts-node node_modules/.bin/tape './test/**/*.spec.ts' | tap-spec",
+    "heroku-postbuild": "echo Skip build on Heroku"
   },
   "author": "Mark Sommers",
   "license": "MIT",
@@ -51,5 +52,6 @@
     "typeorm": "^0.2.11",
     "typescript": "^3.2.2",
     "winston": "2.4.4"
-  }
+  },
+  "heroku-run-build-script": true
 }
