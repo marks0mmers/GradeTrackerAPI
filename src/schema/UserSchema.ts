@@ -1,5 +1,4 @@
 import { Document, model, Schema } from "mongoose";
-import { connection } from "..";
 
 export interface UserDTO {
     _id?: string;
