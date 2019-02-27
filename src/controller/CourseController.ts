@@ -116,13 +116,13 @@ export class CourseControllerImpl implements CourseController {
 
     public async getCoursesByUser(req: UserRequest, res: Response, next: NextFunction) {
         const { userId } = req.params;
-        let loggedIn: User;
+        let loggedIn;
         try {
             loggedIn = await this.userService.getUser(req.payload.id);
         } catch (err) {
             next(err);
         }
-        if (loggedIn.isAdmin) {
+        if (loggedIn.isAdmin || loggedIn.id.toString() === userId) {
             const courses = await this.courseService.getCoursesByUser(userId);
             res.json(courses);
         } else {

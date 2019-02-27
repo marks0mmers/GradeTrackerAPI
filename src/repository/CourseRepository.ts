@@ -26,22 +26,7 @@ export class CourseRepositoryImpl implements CourseRepository {
     }
 
     public async update(courseDTO: CourseDTO): Promise<CourseDTO> {
-        const dto = await courseDatabase.findById(courseDTO._id);
-
-        dto.title = courseDTO.title;
-        dto.description = courseDTO.description;
-        dto.section = courseDTO.section;
-        dto.creditHours = courseDTO.creditHours;
-
-        const saved = await dto.save((err: Error, c: CourseDTO) => {
-            if (err) {
-                logger.error("Error updating course: " + err);
-                throw err;
-            }
-            return c;
-        });
-
-        return saved;
+        return await courseDatabase.findByIdAndUpdate(courseDTO._id, courseDTO);
     }
 
     public async delete(courseId: string): Promise<string> {

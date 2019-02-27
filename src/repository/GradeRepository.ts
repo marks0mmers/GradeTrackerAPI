@@ -22,20 +22,7 @@ export class GradeRepositoryImpl implements GradeRepository {
         return await gradeDatabase.create(gradeDTO);
     }
     public async update(gradeDTO: GradeDTO): Promise<GradeDTO> {
-        const dto = await gradeDatabase.findById(gradeDTO._id);
-
-        dto.name = gradeDTO.name;
-        dto.grade = gradeDTO.grade;
-        dto.gradeCategoryId = gradeDTO.gradeCategoryId;
-
-        const saved = await dto.save((err: Error, grade: GradeDTO) => {
-            if (err) {
-                logger.error("Error updating grade: " + err);
-                throw err;
-            }
-            return grade;
-        });
-        return saved;
+        return await gradeDatabase.findByIdAndUpdate(gradeDTO._id, gradeDTO);
     }
     public async delete(id: string): Promise<string> {
         const deleted = await gradeDatabase.findByIdAndRemove(id);

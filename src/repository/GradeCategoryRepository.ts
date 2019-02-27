@@ -26,27 +26,7 @@ export class GradeCategoryRepositoryImpl implements GradeCategoryRepository {
     }
 
     public async update(gradeCategoryDTO: GradeCategoryDTO): Promise<GradeCategoryDTO> {
-        const dto = await gradeCategoryDatabase.findById(gradeCategoryDTO._id);
-
-        dto.title = gradeCategoryDTO.title;
-        dto.percentage = gradeCategoryDTO.percentage;
-        dto.numberOfGrades = gradeCategoryDTO.numberOfGrades;
-        dto.potentialAverage = gradeCategoryDTO.potentialAverage || null;
-        dto.remainingGrades = gradeCategoryDTO.remainingGrades || null;
-        dto.userId = gradeCategoryDTO.userId;
-        dto.courseId = gradeCategoryDTO.courseId;
-        dto.currentAverage = gradeCategoryDTO.currentAverage || null;
-        dto.guarenteedAverage = gradeCategoryDTO.guarenteedAverage || null;
-
-        const saved = await dto.save((err: Error, g: GradeCategoryDTO) => {
-            if (err) {
-                logger.error("Error updating Grade Category: " + err);
-                throw err;
-            }
-            return g;
-        });
-
-        return saved;
+        return await gradeCategoryDatabase.findByIdAndUpdate(gradeCategoryDTO._id, gradeCategoryDTO);
     }
 
     public async delete(id: string): Promise<string> {
