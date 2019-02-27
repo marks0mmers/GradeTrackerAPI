@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { courseDatabase, CourseDTO } from "../schema/CourseSchema";
+import { courseDatabase, CourseDocument, CourseDTO } from "../schema/CourseSchema";
 import logger from "../util/Logger";
 
 export interface CourseRepository {
@@ -26,7 +26,9 @@ export class CourseRepositoryImpl implements CourseRepository {
     }
 
     public async update(courseDTO: CourseDTO): Promise<CourseDTO> {
-        return await courseDatabase.findByIdAndUpdate(courseDTO._id, courseDTO);
+        return await courseDatabase.findByIdAndUpdate(courseDTO._id, courseDTO, (err: Error, res: CourseDocument) => {
+            return res;
+        });
     }
 
     public async delete(courseId: string): Promise<string> {

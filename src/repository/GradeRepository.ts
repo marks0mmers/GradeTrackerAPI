@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { gradeDatabase, GradeDTO } from "../schema/GradeSchema";
+import { gradeDatabase, GradeDocument, GradeDTO } from "../schema/GradeSchema";
 import logger from "../util/Logger";
 
 export interface GradeRepository {
@@ -22,7 +22,9 @@ export class GradeRepositoryImpl implements GradeRepository {
         return await gradeDatabase.create(gradeDTO);
     }
     public async update(gradeDTO: GradeDTO): Promise<GradeDTO> {
-        return await gradeDatabase.findByIdAndUpdate(gradeDTO._id, gradeDTO);
+        return await gradeDatabase.findByIdAndUpdate(gradeDTO._id, gradeDTO, (err: Error, res: GradeDocument) => {
+            return res;
+        });
     }
     public async delete(id: string): Promise<string> {
         const deleted = await gradeDatabase.findByIdAndRemove(id);

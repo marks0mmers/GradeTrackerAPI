@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { gradeCategoryDatabase, GradeCategoryDTO } from "../schema/GradeCategorySchema";
+import { gradeCategoryDatabase, GradeCategoryDocument, GradeCategoryDTO } from "../schema/GradeCategorySchema";
 import logger from "../util/Logger";
 
 export interface GradeCategoryRepository {
@@ -26,7 +26,9 @@ export class GradeCategoryRepositoryImpl implements GradeCategoryRepository {
     }
 
     public async update(gradeCategoryDTO: GradeCategoryDTO): Promise<GradeCategoryDTO> {
-        return await gradeCategoryDatabase.findByIdAndUpdate(gradeCategoryDTO._id, gradeCategoryDTO);
+        return await gradeCategoryDatabase.findByIdAndUpdate(gradeCategoryDTO._id, gradeCategoryDTO, (err: Error, res: GradeCategoryDocument) => {
+            return res;
+        });
     }
 
     public async delete(id: string): Promise<string> {
