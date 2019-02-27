@@ -9,7 +9,7 @@ export interface CourseService {
     getCourse(id: string): Promise<Course>;
     createCourse(course: Course): Promise<Course>;
     updateCourse(course: Course): Promise<Course>;
-    deleteCourse(id: string): Promise<string>;
+    deleteCourse(id: string): Promise<Course>;
     getCoursesByUser(id: string): Promise<Course[]>;
 }
 
@@ -52,8 +52,10 @@ export class CourseServiceImpl implements CourseService {
         });
     }
 
-    public async deleteCourse(id: string): Promise<string> {
-        return await this.courseRepository.delete(id);
+    public async deleteCourse(id: string): Promise<Course> {
+        return await this.courseRepository.delete(id).then((c: CourseDTO) => {
+            return this.toCourse(c);
+        });
     }
 
     private toCourseDTO(course: Course): CourseDTO {

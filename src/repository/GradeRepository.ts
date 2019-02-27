@@ -7,7 +7,7 @@ export interface GradeRepository {
     find(id: string): Promise<GradeDTO>;
     create(gradeDTO: GradeDTO): Promise<GradeDTO>;
     update(gradeDTO: GradeDTO): Promise<GradeDTO>;
-    delete(id: string): Promise<string>;
+    delete(id: string): Promise<GradeDTO>;
 }
 
 @injectable()
@@ -26,9 +26,8 @@ export class GradeRepositoryImpl implements GradeRepository {
             return res;
         });
     }
-    public async delete(id: string): Promise<string> {
-        const deleted = await gradeDatabase.findByIdAndRemove(id);
-        return deleted ? "Grade successfully deleted" : "Grade not found";
+    public async delete(id: string): Promise<GradeDTO> {
+        return await gradeDatabase.findByIdAndRemove(id);
     }
 
 }

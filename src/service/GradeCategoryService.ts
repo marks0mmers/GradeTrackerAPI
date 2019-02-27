@@ -9,7 +9,7 @@ export interface GradeCategoryService {
     getOne(id: string): Promise<GradeCategory>;
     create(gradeCategory: GradeCategory): Promise<GradeCategory>;
     update(gradeCategory: GradeCategory): Promise<GradeCategory>;
-    delete(id: string): Promise<string>;
+    delete(id: string): Promise<GradeCategory>;
 }
 
 @injectable()
@@ -45,8 +45,9 @@ export class GradeCategoryServiceImpl implements GradeCategoryService {
             .then((g: GradeCategoryDTO) => this.toGradeCategory(g));
     }
 
-    public async delete(id: string): Promise<string> {
-        return await this.gradeCategoryRepository.delete(id);
+    public async delete(id: string): Promise<GradeCategory> {
+        return await this.gradeCategoryRepository.delete(id)
+            .then((g: GradeCategoryDTO) => this.toGradeCategory(g));
     }
 
     private toGradeCategory(gradeCategoryDTO: GradeCategoryDTO): GradeCategory {

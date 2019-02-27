@@ -104,10 +104,10 @@ export class CourseControllerImpl implements CourseController {
         const id: string = req.params.id;
         try {
             const deletedCourse = await this.courseService.deleteCourse(id);
-            if (deletedCourse === "Course Successfully Deleted") {
+            if (deletedCourse) {
                 res.json(deletedCourse);
             } else {
-                res.status(404).json(deletedCourse);
+                res.status(404).json({message: "Cannot Find Course"});
             }
         } catch (err) {
             next(err);

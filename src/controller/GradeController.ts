@@ -78,11 +78,11 @@ export class GradeControllerImpl implements GradeController {
     public async deleteGrade(req: UserRequest, res: Response, next: NextFunction) {
         const gradeId = req.params.gradeId;
         try {
-            const deletedMessage = await this.gradeService.deleteGrade(gradeId);
-            if (deletedMessage === "Grade successfully deleted") {
-                res.json(deletedMessage);
+            const deletedGrade = await this.gradeService.deleteGrade(gradeId);
+            if (deletedGrade) {
+                res.json(deletedGrade);
             } else {
-                res.status(404).json(deletedMessage);
+                res.status(404).json({message: "Cannot find grade"});
             }
         } catch (err) {
             next(err);

@@ -1,13 +1,12 @@
 import { injectable } from "inversify";
 import { courseDatabase, CourseDocument, CourseDTO } from "../schema/CourseSchema";
-import logger from "../util/Logger";
 
 export interface CourseRepository {
     findAll(): Promise<CourseDTO[]>;
     find(id: string): Promise<CourseDTO>;
     create(courseDTO: CourseDTO): Promise<CourseDTO>;
     update(courseDTO: CourseDTO): Promise<CourseDTO>;
-    delete(id: string): Promise<string>;
+    delete(id: string): Promise<CourseDTO>;
 }
 
 @injectable()
@@ -31,9 +30,8 @@ export class CourseRepositoryImpl implements CourseRepository {
         });
     }
 
-    public async delete(courseId: string): Promise<string> {
-        const numberOfDeleted =  await courseDatabase.findByIdAndRemove({_id: courseId});
-        return numberOfDeleted ? "Course Successfully Deleted" : "Course doesn't exist";
+    public async delete(courseId: string): Promise<CourseDTO> {
+        return await courseDatabase.findByIdAndRemove({_id: courseId});
     }
 
 }

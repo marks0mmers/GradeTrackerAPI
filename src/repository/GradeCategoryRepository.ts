@@ -7,7 +7,7 @@ export interface GradeCategoryRepository {
     find(id: string): Promise<GradeCategoryDTO>;
     create(gradeCategoryDTO: GradeCategoryDTO): Promise<GradeCategoryDTO>;
     update(gradeCategoryDTO: GradeCategoryDTO): Promise<GradeCategoryDTO>;
-    delete(id: string): Promise<string>;
+    delete(id: string): Promise<GradeCategoryDTO>;
 }
 
 @injectable()
@@ -31,9 +31,8 @@ export class GradeCategoryRepositoryImpl implements GradeCategoryRepository {
         });
     }
 
-    public async delete(id: string): Promise<string> {
-        const deleted =  await gradeCategoryDatabase.findByIdAndRemove(id);
-        return deleted ? "Grade Category Successfully Deleted" : "Grade Category Doesn't Exist";
+    public async delete(id: string): Promise<GradeCategoryDTO> {
+        return await gradeCategoryDatabase.findByIdAndRemove(id);
     }
 
 }

@@ -9,7 +9,7 @@ export interface GradeService {
     getGrade(gradeId: string): Promise<Grade>;
     newGrade(grade: Grade): Promise<Grade>;
     updateGrade(grade: Grade): Promise<Grade>;
-    deleteGrade(gradeId: string): Promise<string>;
+    deleteGrade(gradeId: string): Promise<Grade>;
 }
 
 @injectable()
@@ -41,8 +41,9 @@ export class GradeServiceImpl implements GradeService {
             .then((createdGrade: GradeDTO) => this.toGrade(createdGrade));
     }
 
-    public async deleteGrade(gradeId: string): Promise<string> {
-        return await this.gradeRepository.delete(gradeId);
+    public async deleteGrade(gradeId: string): Promise<Grade> {
+        return await this.gradeRepository.delete(gradeId)
+            .then((g: GradeDTO) => this.toGrade(g));
     }
 
     private toGrade(gradeDTO: GradeDTO): Grade {

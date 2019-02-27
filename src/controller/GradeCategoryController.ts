@@ -91,11 +91,11 @@ export class GradeCategoryControllerImpl implements GradeCategoryController {
     public async delete(req: UserRequest, res: Response, next: NextFunction) {
         const id: string = req.params.id;
         try {
-            const deletedCourseMessage = await this.gradeCategoryService.delete(id);
-            if (deletedCourseMessage === "Grade Category Successfully Deleted") {
-                res.json(deletedCourseMessage);
+            const deletedCourse = await this.gradeCategoryService.delete(id);
+            if (deletedCourse) {
+                res.json(deletedCourse);
             } else {
-                res.status(404).json(deletedCourseMessage);
+                res.status(404).json({message: "Grade Category Not Found"});
             }
         } catch (err) {
             next(err);
