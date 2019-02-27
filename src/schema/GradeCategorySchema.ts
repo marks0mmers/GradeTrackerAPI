@@ -49,11 +49,11 @@ const gradeCategorySchema = new Schema({
     },
     guarenteedAverage: {
         type: Number,
-        required: true
+        required: false
     },
     potentialAverage: {
         type: Number,
-        required: true
+        required: false
     },
     userId: {
         type: String,
