@@ -1,3 +1,5 @@
+import { CourseDTO } from "../schema/CourseSchema";
+
 export class Course {
     constructor(
         public title: string,
@@ -8,3 +10,25 @@ export class Course {
         public id?: string
     ) {}
 }
+
+export const toCourseDTO = (course: Course): CourseDTO => {
+    return {
+        title: course.title,
+        description: course.description,
+        section: course.section,
+        creditHours: course.creditHours,
+        userId: course.userId,
+        _id: course.id
+    };
+};
+
+export const toCourse = (courseDTO: CourseDTO): Course => {
+    return new Course(
+        courseDTO.title,
+        courseDTO.description,
+        courseDTO.section,
+        courseDTO.creditHours,
+        courseDTO.userId,
+        courseDTO._id.toString()
+    );
+};

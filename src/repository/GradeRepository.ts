@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
+import * as _ from "lodash";
+import { gradeCategoryDatabase } from "../schema/GradeCategorySchema";
 import { gradeDatabase, GradeDocument, GradeDTO } from "../schema/GradeSchema";
-import logger from "../util/Logger";
 
 export interface GradeRepository {
     findAll(): Promise<GradeDTO[]>;
@@ -19,7 +20,13 @@ export class GradeRepositoryImpl implements GradeRepository {
         return await gradeDatabase.findById(id);
     }
     public async create(gradeDTO: GradeDTO): Promise<GradeDTO> {
-        return await gradeDatabase.create(gradeDTO);
+        const gradeCategory = await gradeCategoryDatabase.findById(gradeDTO.gradeCategoryId);
+        const createdGrade = await gradeDatabase.create(gradeDTO);
+        if (gradeCategory.grades) {
+            gradeCategory.grades.push(createdGrade._id);
+        }
+        gradeCategory.save();
+        return createdGrade;
     }
     public async update(gradeDTO: GradeDTO): Promise<GradeDTO> {
         return await gradeDatabase.findByIdAndUpdate(gradeDTO._id, gradeDTO, (err: Error, res: GradeDocument) => {
@@ -27,6 +34,11 @@ export class GradeRepositoryImpl implements GradeRepository {
         });
     }
     public async delete(id: string): Promise<GradeDTO> {
+        const grade = await gradeDatabase.findById(id);
+        const gradeCategory = await gradeCategoryDatabase.findById(grade.gradeCategoryId);
+        if (gradeCategory.grades) {
+            gradeCategory.grades = _.remove(gradeCategory.grades, (gradeId) => gradeId === id);
+        }
         return await gradeDatabase.findByIdAndRemove(id);
     }
 

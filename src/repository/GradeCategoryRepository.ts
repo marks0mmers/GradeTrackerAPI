@@ -1,6 +1,5 @@
 import { injectable } from "inversify";
 import { gradeCategoryDatabase, GradeCategoryDocument, GradeCategoryDTO } from "../schema/GradeCategorySchema";
-import logger from "../util/Logger";
 
 export interface GradeCategoryRepository {
     findAll(): Promise<GradeCategoryDTO[]>;
@@ -14,11 +13,15 @@ export interface GradeCategoryRepository {
 export class GradeCategoryRepositoryImpl implements GradeCategoryRepository {
 
     public async findAll(): Promise<GradeCategoryDTO[]> {
-        return await gradeCategoryDatabase.find();
+        const gradeCategories = await gradeCategoryDatabase.find()
+            .populate("grades")
+            .exec();
+        return gradeCategories;
     }
 
     public async find(id: string): Promise<GradeCategoryDTO> {
-        return await gradeCategoryDatabase.findById(id);
+        const gradeCategory = await gradeCategoryDatabase.findById(id).populate("grades").exec();
+        return gradeCategory;
     }
 
     public async create(gradeCategoryDTO: GradeCategoryDTO): Promise<GradeCategoryDTO> {

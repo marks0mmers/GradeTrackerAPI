@@ -24,9 +24,10 @@ const gradeSchema = new Schema({
         required: true
     },
     gradeCategoryId: {
-        type: String,
-        required: true
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "GradeCategory"
     }
 });
 
-export const gradeDatabase = model<GradeDocument>("grades", gradeSchema);
+export const gradeDatabase = model<GradeDocument>("Grade", gradeSchema);

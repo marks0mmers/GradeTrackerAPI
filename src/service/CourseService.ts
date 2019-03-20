@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import TYPES from "../config/types";
-import { Course } from "../model/Course";
+import { Course, toCourse, toCourseDTO } from "../model/Course";
 import { CourseRepository } from "../repository/CourseRepository";
 import { CourseDTO } from "../schema/CourseSchema";
 
@@ -21,63 +21,41 @@ export class CourseServiceImpl implements CourseService {
 
     public async getCourses(): Promise<Course[]> {
         return await this.courseRepository.findAll().then((c: CourseDTO[]) => c.map((course: CourseDTO) => {
-            return this.toCourse(course);
+            return toCourse(course);
         }));
     }
 
     public async getCoursesByUser(id: string): Promise<Course[]> {
         return await this.courseRepository.findAll().then((c: CourseDTO[]) => {
-            return c.map((course: CourseDTO) => this.toCourse(course))
+            return c.map((course: CourseDTO) => toCourse(course))
                 .filter((course: Course) => course.userId === id);
         });
     }
 
     public async getCourse(id: string): Promise<Course> {
         return await this.courseRepository.find(id).then((c: CourseDTO) => {
-            return this.toCourse(c);
+            return toCourse(c);
         });
     }
 
     public async createCourse(course: Course): Promise<Course> {
-        const courseDTO = this.toCourseDTO(course);
+        const courseDTO = toCourseDTO(course);
         return await this.courseRepository.create(courseDTO).then((c: CourseDTO) => {
-            return this.toCourse(c);
+            return toCourse(c);
         });
     }
 
     public async updateCourse(course: Course): Promise<Course> {
-        const courseDTO = this.toCourseDTO(course);
+        const courseDTO = toCourseDTO(course);
         return await this.courseRepository.update(courseDTO).then((c: CourseDTO) => {
-            return this.toCourse(c);
+            return toCourse(c);
         });
     }
 
     public async deleteCourse(id: string): Promise<Course> {
         return await this.courseRepository.delete(id).then((c: CourseDTO) => {
-            return this.toCourse(c);
+            return toCourse(c);
         });
-    }
-
-    private toCourseDTO(course: Course): CourseDTO {
-        return {
-            title: course.title,
-            description: course.description,
-            section: course.section,
-            creditHours: course.creditHours,
-            userId: course.userId,
-            _id: course.id
-        };
-    }
-
-    private toCourse(courseDTO: CourseDTO): Course {
-        return new Course(
-            courseDTO.title,
-            courseDTO.description,
-            courseDTO.section,
-            courseDTO.creditHours,
-            courseDTO.userId,
-            courseDTO._id.toString()
-        );
     }
 
 }

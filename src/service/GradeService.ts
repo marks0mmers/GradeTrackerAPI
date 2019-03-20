@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import TYPES from "../config/types";
-import { Grade } from "../model/Grade";
+import { Grade, toGrade, toGradeDTO } from "../model/Grade";
 import { GradeRepository } from "../repository/GradeRepository";
 import { GradeDTO } from "../schema/GradeSchema";
 
@@ -20,48 +20,30 @@ export class GradeServiceImpl implements GradeService {
 
     public async getGradesFromCategory(gradeCategoryId: string): Promise<Grade[]> {
         return await this.gradeRepository.findAll()
-            .then((dtos: GradeDTO[]) => dtos.map((dto) => this.toGrade(dto)))
+            .then((dtos: GradeDTO[]) => dtos.map((dto) => toGrade(dto)))
             .then((grades: Grade[]) => grades.filter((grade: Grade) => grade.gradeCategoryId === gradeCategoryId));
     }
 
     public async getGrade(gradeId: string): Promise<Grade> {
         return await this.gradeRepository.find(gradeId)
-            .then((grade: GradeDTO) => this.toGrade(grade));
+            .then((grade: GradeDTO) => toGrade(grade));
     }
 
     public async newGrade(grade: Grade): Promise<Grade> {
-        const newGrade = this.toGradeDTO(grade);
+        const newGrade = toGradeDTO(grade);
         return await this.gradeRepository.create(newGrade)
-            .then((createdGrade: GradeDTO) => this.toGrade(createdGrade));
+            .then((createdGrade: GradeDTO) => toGrade(createdGrade));
     }
 
     public async updateGrade(grade: Grade): Promise<Grade> {
-        const newGrade = this.toGradeDTO(grade);
+        const newGrade = toGradeDTO(grade);
         return await this.gradeRepository.update(newGrade)
-            .then((createdGrade: GradeDTO) => this.toGrade(createdGrade));
+            .then((createdGrade: GradeDTO) => toGrade(createdGrade));
     }
 
     public async deleteGrade(gradeId: string): Promise<Grade> {
         return await this.gradeRepository.delete(gradeId)
-            .then((g: GradeDTO) => this.toGrade(g));
-    }
-
-    private toGrade(gradeDTO: GradeDTO): Grade {
-        return new Grade(
-            gradeDTO.name,
-            gradeDTO.grade,
-            gradeDTO.gradeCategoryId,
-            gradeDTO._id
-        );
-    }
-
-    private toGradeDTO(grade: Grade): GradeDTO {
-        return {
-            _id: grade.id,
-            name: grade.name,
-            grade: grade.grade,
-            gradeCategoryId: grade.gradeCategoryId
-        };
+            .then((g: GradeDTO) => toGrade(g));
     }
 
 }

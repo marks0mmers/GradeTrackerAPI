@@ -41,4 +41,4 @@ const courseSchema = new Schema<CourseDTO>({
     }
 });
 
-export const courseDatabase = model<CourseDocument>("courses", courseSchema);
+export const courseDatabase = model<CourseDocument>("Course", courseSchema);

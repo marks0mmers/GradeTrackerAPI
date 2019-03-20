@@ -1,4 +1,5 @@
 import { Document, model, Schema } from "mongoose";
+import { GradeDTO } from "./GradeSchema";
 
 export interface GradeCategoryDTO {
     _id: string;
@@ -9,8 +10,8 @@ export interface GradeCategoryDTO {
     currentAverage?: number;
     guarenteedAverage?: number;
     potentialAverage?: number;
-    userId: string;
     courseId: string;
+    grades?: GradeDTO[];
 }
 
 export interface GradeCategoryDocument extends Document {
@@ -22,8 +23,8 @@ export interface GradeCategoryDocument extends Document {
     currentAverage?: number;
     guarenteedAverage?: number;
     potentialAverage?: number;
-    userId: string;
     courseId: string;
+    grades?: any[];
 }
 
 const gradeCategorySchema = new Schema({
@@ -55,14 +56,13 @@ const gradeCategorySchema = new Schema({
         type: Number,
         required: false
     },
-    userId: {
-        type: String,
+    courseId: {
+        type: Schema.Types.ObjectId,
         required: true
     },
-    courseId: {
-        type: String,
-        required: true
-    }
+    grades: [
+        { type: Schema.Types.ObjectId, ref: "Grade" }
+    ]
 });
 
-export const gradeCategoryDatabase = model<GradeCategoryDocument>("grade-categories", gradeCategorySchema);
+export const gradeCategoryDatabase = model<GradeCategoryDocument>("GradeCategory", gradeCategorySchema);
