@@ -6,10 +6,6 @@ export interface GradeCategoryDTO {
     title: string;
     percentage: number;
     numberOfGrades: number;
-    remainingGrades?: number;
-    currentAverage?: number;
-    guarenteedAverage?: number;
-    potentialAverage?: number;
     courseId: string;
     grades?: GradeDTO[];
 }
@@ -19,10 +15,6 @@ export interface GradeCategoryDocument extends Document {
     title: string;
     percentage: number;
     numberOfGrades: number;
-    remainingGrades?: number;
-    currentAverage?: number;
-    guarenteedAverage?: number;
-    potentialAverage?: number;
     courseId: string;
     grades?: any[];
 }
@@ -39,22 +31,6 @@ const gradeCategorySchema = new Schema({
     numberOfGrades: {
         type: Number,
         required: true
-    },
-    remainingGrades: {
-        type: Number,
-        required: false
-    },
-    currentAverage: {
-        type: Number,
-        required: false
-    },
-    guarenteedAverage: {
-        type: Number,
-        required: false
-    },
-    potentialAverage: {
-        type: Number,
-        required: false
     },
     courseId: {
         type: Schema.Types.ObjectId,
