@@ -30,7 +30,8 @@ export class App {
 
     private config() {
         // Connect to mongoose database
-        connect(process.env.MONGODB_URI || "mongodb://localhost:27017/grade-tracker", { useNewUrlParser: true });
+        // tslint:disable-next-line:max-line-length
+        connect(process.env.MONGODB_URI || "mongodb://heroku_k1lm0tlz:vmn8kc43irbuvvckg2jtnk0vm2@ds131905.mlab.com:31905/heroku_k1lm0tlz", { useNewUrlParser: true });
 
         // Configure passport strategy
         require("./config/Passport");
