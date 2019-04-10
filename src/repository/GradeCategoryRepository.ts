@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import { gradeCategoryDatabase, GradeCategoryDocument, GradeCategoryDTO } from "../schema/GradeCategorySchema";
 
 export interface GradeCategoryRepository {
-    findAll(): Promise<GradeCategoryDTO[]>;
+    findAll(courseId: string): Promise<GradeCategoryDTO[]>;
     find(id: string): Promise<GradeCategoryDTO>;
     create(gradeCategoryDTO: GradeCategoryDTO): Promise<GradeCategoryDTO>;
     update(gradeCategoryDTO: GradeCategoryDTO): Promise<GradeCategoryDTO>;
@@ -12,8 +12,8 @@ export interface GradeCategoryRepository {
 @injectable()
 export class GradeCategoryRepositoryImpl implements GradeCategoryRepository {
 
-    public async findAll(): Promise<GradeCategoryDTO[]> {
-        const gradeCategories = await gradeCategoryDatabase.find()
+    public async findAll(courseId: string): Promise<GradeCategoryDTO[]> {
+        const gradeCategories = await gradeCategoryDatabase.find({courseId})
             .populate("grades")
             .exec();
         return gradeCategories;
