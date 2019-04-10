@@ -60,8 +60,7 @@ export class GradeCategoryControllerImpl implements GradeCategoryController {
             req.body.title,
             req.body.percentage,
             req.body.numberOfGrades,
-            req.params.courseId,
-            req.payload.id
+            req.params.courseId
         );
 
         try {
