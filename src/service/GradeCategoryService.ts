@@ -1,12 +1,15 @@
 import { ObjectId } from "bson";
 import { inject, injectable } from "inversify";
 import TYPES from "../config/types";
+import { Course } from "../model/Course";
 import { Grade, toGrade, toGradeDTO } from "../model/Grade";
 import { GradeCategory } from "../model/GradeCategory";
 import { GradeCategoryRepository } from "../repository/GradeCategoryRepository";
 import { GradeCategoryDTO } from "../schema/GradeCategorySchema";
+import { CourseService } from "./CourseService";
 
 export interface GradeCategoryService {
+    getAllForUser(userId: string): Promise<GradeCategory[]>;
     getAll(courseId: string): Promise<GradeCategory[]>;
     getOne(id: string): Promise<GradeCategory>;
     create(gradeCategory: GradeCategory): Promise<GradeCategory>;
@@ -19,6 +22,17 @@ export class GradeCategoryServiceImpl implements GradeCategoryService {
 
     @inject(TYPES.GradeCategoryRepository)
     private gradeCategoryRepository: GradeCategoryRepository;
+
+    @inject(TYPES.CourseService)
+    private courseService: CourseService;
+
+    public async getAllForUser(userId: string): Promise<GradeCategory[]> {
+        const courses = await this.courseService.getCoursesByUser(userId);
+        const courseIds = courses.map((c: Course) => c.id);
+        return await this.gradeCategoryRepository.findAll()
+            .then((categories: GradeCategoryDTO[]) => categories.map((g: GradeCategoryDTO) => this.toGradeCategory(g).calculateGrades()))
+            .then((categories: GradeCategory[]) => categories.filter((g: GradeCategory) => courseIds.indexOf(g.courseId) >= 0));
+    }
 
     public async getAll(courseId: string): Promise<GradeCategory[]> {
         return await this.gradeCategoryRepository.findAll()
