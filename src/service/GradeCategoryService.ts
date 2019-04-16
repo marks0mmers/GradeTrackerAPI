@@ -31,7 +31,9 @@ export class GradeCategoryServiceImpl implements GradeCategoryService {
         const courseIds = courses.map((c: Course) => c.id);
         return await this.gradeCategoryRepository.findAll()
             .then((categories: GradeCategoryDTO[]) => categories.map((g: GradeCategoryDTO) => this.toGradeCategory(g).calculateGrades()))
-            .then((categories: GradeCategory[]) => categories.filter((g: GradeCategory) => courseIds.indexOf(g.courseId) >= 0));
+            .then((categories: GradeCategory[]) => categories.filter((g: GradeCategory) => {
+                return courseIds.indexOf(new ObjectId(g.courseId).toHexString()) >= 0;
+            }));
     }
 
     public async getAll(courseId: string): Promise<GradeCategory[]> {
