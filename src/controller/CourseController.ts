@@ -8,7 +8,7 @@ import { UserService } from "../service/UserService";
 import { UserRequest } from "../util/Request";
 
 export interface CourseController {
-    getAllCourses(req: UserRequest, res: Response, next: NextFunction): void;
+    getCoursesCurrentUser(req: UserRequest, res: Response, next: NextFunction): void;
     getCourse(req: UserRequest, res: Response, next: NextFunction): void;
     newCourse(req: UserRequest, res: Response, next: NextFunction): void;
     updateCourse(req: UserRequest, res: Response, next: NextFunction): void;
@@ -30,7 +30,7 @@ export class CourseControllerImpl implements CourseController {
         this.courseService = courseService;
         this.userService = userService;
 
-        this.getAllCourses = this.getAllCourses.bind(this);
+        this.getCoursesCurrentUser = this.getCoursesCurrentUser.bind(this);
         this.getCoursesByUser = this.getCoursesByUser.bind(this);
         this.getCourse = this.getCourse.bind(this);
         this.newCourse = this.newCourse.bind(this);
@@ -38,7 +38,7 @@ export class CourseControllerImpl implements CourseController {
         this.deleteCourse = this.deleteCourse.bind(this);
     }
 
-    public async getAllCourses(req: UserRequest, res: Response, next: NextFunction) {
+    public async getCoursesCurrentUser(req: UserRequest, res: Response, next: NextFunction) {
         let user: User;
         try {
             user = await this.userService.getUser(req.payload.id);
@@ -47,7 +47,7 @@ export class CourseControllerImpl implements CourseController {
         }
         try {
             const courses = await this.courseService.getCourses()
-                .then((values: Course[]) => values.filter((value: Course) => user.isAdmin || value.userId === user.id));
+                .then((values: Course[]) => values.filter((value: Course) => value.userId === user.id));
             res.json(courses);
         } catch (err) {
             next(err);
@@ -116,13 +116,13 @@ export class CourseControllerImpl implements CourseController {
 
     public async getCoursesByUser(req: UserRequest, res: Response, next: NextFunction) {
         const { userId } = req.params;
-        let loggedIn;
+        let user: User;
         try {
-            loggedIn = await this.userService.getUser(req.payload.id);
+            user = await this.userService.getUser(req.params.id);
         } catch (err) {
             next(err);
         }
-        if (loggedIn.isAdmin || loggedIn.id.toString() === userId) {
+        if (user.id.toString() === userId) {
             const courses = await this.courseService.getCoursesByUser(userId);
             res.json(courses);
         } else {

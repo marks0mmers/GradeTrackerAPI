@@ -1,6 +1,7 @@
 import { pbkdf2Sync, randomBytes } from "crypto";
 import { sign } from "jsonwebtoken";
 import { UserDTO } from "../schema/UserSchema";
+import { Role, toRoleDTO } from "./Role";
 
 export class User {
 
@@ -10,7 +11,7 @@ export class User {
         public email: string,
         public salt: string,
         public hash: string,
-        public isAdmin: boolean,
+        public roles?: Role[],
         public id?: string
     ) {}
 
@@ -42,8 +43,8 @@ export class User {
             firstName: this.firstName,
             lastName: this.lastName,
             email: this.email,
-            isAdmin: this.isAdmin,
-            token: this.generateJWT()
+            token: this.generateJWT(),
+            roles: this.roles.map((role: Role) => toRoleDTO(role))
         };
     }
 
@@ -53,7 +54,7 @@ export class User {
             firstName: this.firstName,
             lastName: this.lastName,
             email: this.email,
-            isAdmin: this.isAdmin
+            roles: this.roles.map((role: Role) => toRoleDTO(role))
         };
     }
 

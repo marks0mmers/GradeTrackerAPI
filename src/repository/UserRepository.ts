@@ -15,11 +15,11 @@ export class UserRepositoryImpl implements UserRepository {
     }
 
     public async getUser(id: string): Promise<UserDatabaseDTO> {
-        return await userDatabase.findById(id);
+        return await userDatabase.findById(id).populate("roles").exec();
     }
 
     public async getUsers(): Promise<UserDatabaseDTO[]> {
-        return await userDatabase.find();
+        return await userDatabase.find().populate("roles").exec();
     }
 
 }

@@ -13,7 +13,7 @@ export class GradeCategoryRoute implements RegistrableRoute {
 
     public register(app: Application) {
         app.route("/api/gradeCategories")
-        .get(auth.required, this.gradeCategoryController.getAllForUser);
+        .get(auth.required, this.gradeCategoryController.getAllForCurrentUser);
 
         app.route("/api/gradeCategories/course/:courseId")
         .get(auth.required, this.gradeCategoryController.getAllByCourse)

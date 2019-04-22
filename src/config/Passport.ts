@@ -8,7 +8,7 @@ use(new Strategy({
     passwordField: "password"
 }, async (email: string, password: string, done: (error: any, user?: any, options?: any) => void) => {
     try {
-        const values = await userDatabase.find();
+        const values = await userDatabase.find().populate("roles").exec();
         const user = values.find((value: UserDatabaseDTO) => value.email === email);
         const userObject = new User(
             user.firstName,
@@ -16,7 +16,7 @@ use(new Strategy({
             user.email,
             user.salt,
             user.hash,
-            user.isAdmin,
+            user.roles,
             user._id
         );
         if (!userObject || !userObject.validatePassword(password)) {

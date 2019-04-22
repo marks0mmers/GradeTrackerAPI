@@ -9,7 +9,7 @@ import { UserRequest } from "../util/Request";
 
 export interface GradeCategoryController {
     getAllByCourse(req: UserRequest, res: Response, next: NextFunction): void;
-    getAllForUser(req: UserRequest, res: Response, next: NextFunction): void;
+    getAllForCurrentUser(req: UserRequest, res: Response, next: NextFunction): void;
     getOne(req: UserRequest, res: Response, next: NextFunction): void;
     create(req: UserRequest, res: Response, next: NextFunction): void;
     update(req: UserRequest, res: Response, next: NextFunction): void;
@@ -21,24 +21,20 @@ export class GradeCategoryControllerImpl implements GradeCategoryController {
 
     private gradeCategoryService: GradeCategoryService;
 
-    private userService: UserService;
-
     constructor(
-        @inject(TYPES.GradeCategoryService) gradeCategoryService: GradeCategoryService,
-        @inject(TYPES.UserService) userService: UserService
+        @inject(TYPES.GradeCategoryService) gradeCategoryService: GradeCategoryService
     ) {
         this.gradeCategoryService = gradeCategoryService;
-        this.userService = userService;
 
         this.getAllByCourse = this.getAllByCourse.bind(this);
-        this.getAllForUser = this.getAllForUser.bind(this);
+        this.getAllForCurrentUser = this.getAllForCurrentUser.bind(this);
         this.getOne = this.getOne.bind(this);
         this.create = this.create.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
     }
 
-    public async getAllForUser(req: UserRequest, res: Response, next: NextFunction) {
+    public async getAllForCurrentUser(req: UserRequest, res: Response, next: NextFunction) {
         const userId = req.payload.id;
         try {
             const gradeCategories = await this.gradeCategoryService.getAllForUser(userId);

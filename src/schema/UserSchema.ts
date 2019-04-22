@@ -1,4 +1,5 @@
 import { Document, model, Schema } from "mongoose";
+import { RoleDTO } from "./RoleSchema";
 
 export interface UserDTO {
     _id?: string;
@@ -6,7 +7,7 @@ export interface UserDTO {
     lastName: string;
     email: string;
     token: string;
-    isAdmin: boolean;
+    roles?: RoleDTO[];
 }
 
 export interface UserDatabaseDTO {
@@ -16,7 +17,7 @@ export interface UserDatabaseDTO {
     email: string;
     hash: string;
     salt: string;
-    isAdmin: boolean;
+    roles?: RoleDTO[];
 }
 
 export interface UserDatabaseDocument extends Document {
@@ -26,7 +27,7 @@ export interface UserDatabaseDocument extends Document {
     email: string;
     hash: string;
     salt: string;
-    isAdmin: boolean;
+    roles?: any[];
 }
 
 export interface NewUserDTO {
@@ -34,7 +35,6 @@ export interface NewUserDTO {
     lastName: string;
     email: string;
     password: string;
-    isAdmin: boolean;
 }
 
 export interface LoginDTO {
@@ -63,10 +63,9 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    isAdmin: {
-        type: Boolean,
-        required: true
-    }
+    roles: [
+        { type: Schema.Types.ObjectId, ref: "Role" }
+    ]
 });
 
 export const userDatabase = model<UserDatabaseDocument>("User", userSchema);

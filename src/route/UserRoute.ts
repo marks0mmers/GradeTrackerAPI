@@ -2,6 +2,7 @@ import { Application } from "express";
 import { inject, injectable } from "inversify";
 import TYPES from "../config/types";
 import { UserController } from "../controller/UserController";
+import { userHasRole } from "../middleware/RoleMiddleware";
 import { auth } from "../util/Auth";
 import { RegistrableRoute } from "./RegistrableRoute";
 
@@ -16,7 +17,7 @@ export class UserRoute implements RegistrableRoute {
 
     public register(app: Application): void {
         app.route("/api/users")
-        .get(auth.required, this.userController.getUsers)
+        .get(auth.required, userHasRole("admin"), this.userController.getUsers)
         .post(auth.optional, this.userController.newUser);
 
         app.route("/api/users/login")
@@ -26,6 +27,6 @@ export class UserRoute implements RegistrableRoute {
         .get(auth.required, this.userController.current);
 
         app.route("/api/users/:userId")
-        .get(auth.required, this.userController.getUser);
+        .get(auth.required, userHasRole("admin"), this.userController.getUser);
     }
 }

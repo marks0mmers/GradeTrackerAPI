@@ -51,14 +51,8 @@ export class UserControllerImpl implements UserController {
 
     public async getUser(req: UserRequest, res: Response, next: NextFunction) {
         try {
-            const { payload: { id } } = req;
-            const currentUser = await this.userService.getUser(id);
-            if (currentUser.isAdmin) {
-                const retUser = await this.userService.getUser(req.params.userId);
-                res.json(retUser.toJSON());
-            } else {
-                res.status(401).json({message: "You are not authorized to access this user"});
-            }
+            const retUser = await this.userService.getUser(req.params.userId);
+            res.json(retUser.toJSON());
         } catch (err) {
             next(err);
         }
@@ -66,13 +60,8 @@ export class UserControllerImpl implements UserController {
 
     public async getUsers(req: UserRequest, res: Response, next: NextFunction) {
         try {
-            const currentUser = await this.userService.getUser(req.payload.id);
-            if (currentUser.isAdmin) {
-                const users = await this.userService.getUsers();
-                res.json(users.map((user) => user.toJSON()));
-            } else {
-                res.status(401).json({message: "You are not authorized to access this user"});
-            }
+            const users = await this.userService.getUsers();
+            res.json(users.map((user) => user.toJSON()));
         } catch (err) {
             next(err);
         }

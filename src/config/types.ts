@@ -9,6 +9,10 @@ const TYPES = {
     UserRepository: Symbol("UserRepository"),
     UserService: Symbol("UserService"),
 
+    RoleController: Symbol("RoleController"),
+    RoleRepository: Symbol("RoleRepository"),
+    RoleService: Symbol("RoleService"),
+
     GradeCategoryController: Symbol("GradeCategoryController"),
     GradeCategoryRepository: Symbol("GradeCategoryRepository"),
     GradeCategoryService: Symbol("GradeCategoryService"),

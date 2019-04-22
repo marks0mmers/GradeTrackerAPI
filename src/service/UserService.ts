@@ -3,9 +3,12 @@ import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { authenticate } from "passport";
 import TYPES from "../config/types";
+import { Role, toRole, toRoleDTO } from "../model/Role";
 import { User } from "../model/User";
 import { UserRepository } from "../repository/UserRepository";
+import { RoleDTO } from "../schema/RoleSchema";
 import { LoginDTO, NewUserDTO, UserDatabaseDTO, UserDTO } from "../schema/UserSchema";
+import { RoleService } from "./RoleService";
 
 export interface UserService {
     newUser(user: NewUserDTO): Promise<User>;
@@ -20,12 +23,19 @@ export class UserServiceImpl implements UserService {
     @inject(TYPES.UserRepository)
     private userRepository: UserRepository;
 
+    @inject(TYPES.RoleService)
+    private roleService: RoleService;
+
     public async newUser(user: NewUserDTO): Promise<User> {
-        const createdUser = new User(user.firstName, user.lastName, user.email, "", "", user.isAdmin);
+        const createdUser = new User(user.firstName, user.lastName, user.email, "", "");
         createdUser.setPassword(user.password);
-        return await this.userRepository.newUser(this.toUserDto(createdUser)).then((u: UserDatabaseDTO) => {
+        const newUser = await this.userRepository.newUser(this.toUserDto(createdUser)).then((u: UserDatabaseDTO) => {
             return this.toUser(u);
         });
+        const defaultRole = await this.roleService.newRole(new Role("user", newUser.id));
+        newUser.roles = [];
+        newUser.roles.push(defaultRole);
+        return newUser;
     }
 
     public login(req: Request, res: Response, next: NextFunction) {
@@ -40,7 +50,7 @@ export class UserServiceImpl implements UserService {
                     passportUser.email,
                     passportUser.salt,
                     passportUser.hash,
-                    passportUser.isAdmin,
+                    passportUser.roles && passportUser.roles.map((r: RoleDTO) => toRole(r)),
                     passportUser._id
                 );
                 return res.json(user.toAuthJSON());
@@ -68,7 +78,7 @@ export class UserServiceImpl implements UserService {
             email: user.email,
             hash: user.hash,
             salt: user.salt,
-            isAdmin: user.isAdmin,
+            roles: user.roles && user.roles.map((r) => toRoleDTO(r)),
             _id: user.id
         };
     }
@@ -80,7 +90,7 @@ export class UserServiceImpl implements UserService {
             user.email,
             user.salt,
             user.hash,
-            user.isAdmin,
+            user.roles && user.roles.map((r) => toRole(r)),
             user._id
         );
     }

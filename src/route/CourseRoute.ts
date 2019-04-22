@@ -2,6 +2,7 @@ import { Application } from "express";
 import { inject, injectable } from "inversify";
 import TYPES from "../config/types";
 import { CourseController } from "../controller/CourseController";
+import { userHasRole } from "../middleware/RoleMiddleware";
 import { auth } from "../util/Auth";
 import { RegistrableRoute } from "./RegistrableRoute";
 
@@ -12,7 +13,7 @@ export class CourseRoute implements RegistrableRoute {
 
     public register(app: Application): void {
         app.route("/api/courses")
-        .get(auth.required, this.courseController.getAllCourses)
+        .get(auth.required, this.courseController.getCoursesCurrentUser)
         .post(auth.required, this.courseController.newCourse);
 
         app.route("/api/courses/:id")
@@ -21,7 +22,7 @@ export class CourseRoute implements RegistrableRoute {
         .delete(auth.required, this.courseController.deleteCourse);
 
         app.route("/api/courses/user/:userId")
-        .get(auth.required, this.courseController.getCoursesByUser);
+        .get(auth.required, userHasRole("admin"), this.courseController.getCoursesByUser);
     }
 
 }
