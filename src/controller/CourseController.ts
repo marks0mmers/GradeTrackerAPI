@@ -39,15 +39,11 @@ export class CourseControllerImpl implements CourseController {
     }
 
     public async getCoursesCurrentUser(req: UserRequest, res: Response, next: NextFunction) {
-        let user: User;
-        try {
-            user = await this.userService.getUser(req.payload.id);
-        } catch (err) {
-            next(err);
-        }
         try {
             const courses = await this.courseService.getCourses()
-                .then((values: Course[]) => values.filter((value: Course) => value.userId === user.id));
+                .then((values: Course[]) => {
+                    return values.filter((value: Course) => value.userId === req.payload.id);
+                });
             res.json(courses);
         } catch (err) {
             next(err);
