@@ -1,39 +1,19 @@
 import { NextFunction, Response } from "express";
-import { inject, injectable } from "inversify";
+import { inject } from "inversify";
+import { controller, httpDelete, httpGet, httpPost, httpPut } from "inversify-express-utils";
 import TYPES from "../config/types";
 import { GradeCategory } from "../model/GradeCategory";
-import { User } from "../model/User";
 import { GradeCategoryService } from "../service/GradeCategoryService";
-import { UserService } from "../service/UserService";
+import { auth } from "../util/Auth";
 import { UserRequest } from "../util/Request";
 
-export interface GradeCategoryController {
-    getAllByCourse(req: UserRequest, res: Response, next: NextFunction): void;
-    getAllForCurrentUser(req: UserRequest, res: Response, next: NextFunction): void;
-    getOne(req: UserRequest, res: Response, next: NextFunction): void;
-    create(req: UserRequest, res: Response, next: NextFunction): void;
-    update(req: UserRequest, res: Response, next: NextFunction): void;
-    delete(req: UserRequest, res: Response, next: NextFunction): void;
-}
+@controller("/gradeCategories", auth.required)
+export class GradeCategoryController {
 
-@injectable()
-export class GradeCategoryControllerImpl implements GradeCategoryController {
-
+    @inject(TYPES.GradeCategoryService)
     private gradeCategoryService: GradeCategoryService;
 
-    constructor(
-        @inject(TYPES.GradeCategoryService) gradeCategoryService: GradeCategoryService
-    ) {
-        this.gradeCategoryService = gradeCategoryService;
-
-        this.getAllByCourse = this.getAllByCourse.bind(this);
-        this.getAllForCurrentUser = this.getAllForCurrentUser.bind(this);
-        this.getOne = this.getOne.bind(this);
-        this.create = this.create.bind(this);
-        this.update = this.update.bind(this);
-        this.delete = this.delete.bind(this);
-    }
-
+    @httpGet("/")
     public async getAllForCurrentUser(req: UserRequest, res: Response, next: NextFunction) {
         const userId = req.payload.id;
         try {
@@ -44,6 +24,7 @@ export class GradeCategoryControllerImpl implements GradeCategoryController {
         }
     }
 
+    @httpGet("/course/:courseId")
     public async getAllByCourse(req: UserRequest, res: Response, next: NextFunction) {
         const courseId = req.params.courseId;
         try {
@@ -53,6 +34,8 @@ export class GradeCategoryControllerImpl implements GradeCategoryController {
             next(err);
         }
     }
+
+    @httpGet("/:id")
     public async getOne(req: UserRequest, res: Response, next: NextFunction) {
         const categoryId = req.params.id;
         try {
@@ -62,6 +45,8 @@ export class GradeCategoryControllerImpl implements GradeCategoryController {
             next(err);
         }
     }
+
+    @httpPost("/course/:courseId")
     public async create(req: UserRequest, res: Response, next: NextFunction) {
 
         const gradeCategory = new GradeCategory(
@@ -78,6 +63,8 @@ export class GradeCategoryControllerImpl implements GradeCategoryController {
             next(err);
         }
     }
+
+    @httpPut("/:id")
     public async update(req: UserRequest, res: Response, next: NextFunction) {
         const gradeCategory = new GradeCategory(
             req.body.title,
@@ -94,6 +81,8 @@ export class GradeCategoryControllerImpl implements GradeCategoryController {
             next(err);
         }
     }
+
+    @httpDelete("/:id")
     public async delete(req: UserRequest, res: Response, next: NextFunction) {
         const id: string = req.params.id;
         try {

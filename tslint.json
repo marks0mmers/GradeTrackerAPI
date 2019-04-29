@@ -7,7 +7,6 @@
             "double"
         ],
         "no-var-requires": false,
-        "no-unused-variable": true,
         "interface-name": [
             true,
             "never-prefix"

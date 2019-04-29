@@ -13,6 +13,16 @@
             "sourceMaps": true,
             "cwd": "${workspaceRoot}",
             "protocol": "inspector",
+        },
+        {
+            "name": "Mocha Tests",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/ts-mocha/bin/ts-mocha",
+            "args": [
+                "-p",
+                "tsconfig.json",
+                "test/**/*.spec.ts"
+            ]
         }
     ]
 }

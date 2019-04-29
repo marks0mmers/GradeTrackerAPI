@@ -6,7 +6,7 @@
         "types": ["reflect-metadata"],
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "lib": ["es6", "dom"],
+        "lib": ["es6", "dom", "es2015.reflect"],
         "jsx": "react",
         "allowUnreachableCode": true
     },
@@ -15,4 +15,4 @@
     ],
     "compileOnSave": false,
     "buildOnSave": false
-  }
+}

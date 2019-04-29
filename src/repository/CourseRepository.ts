@@ -25,9 +25,7 @@ export class CourseRepositoryImpl implements CourseRepository {
     }
 
     public async update(courseDTO: CourseDTO): Promise<CourseDTO> {
-        return await courseDatabase.findByIdAndUpdate(courseDTO._id, courseDTO, (err: Error, res: CourseDocument) => {
-            return res;
-        });
+        return await courseDatabase.findByIdAndUpdate(courseDTO._id, courseDTO, (err: Error, res: CourseDocument) => res);
     }
 
     public async delete(courseId: string): Promise<CourseDTO> {

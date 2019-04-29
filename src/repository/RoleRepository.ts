@@ -32,9 +32,7 @@ export class RoleRepositoryImpl implements RoleRepository {
     }
 
     public async update(roleDTO: RoleDTO): Promise<RoleDTO> {
-        return await roleDatabase.findByIdAndUpdate(roleDTO._id, roleDTO, (err: Error, res: RoleDocument) => {
-            return res;
-        });
+        return await roleDatabase.findByIdAndUpdate(roleDTO._id, roleDTO, (err: Error, res: RoleDocument) => res);
     }
 
     public async delete(id: string): Promise<RoleDTO> {

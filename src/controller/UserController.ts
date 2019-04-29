@@ -1,31 +1,20 @@
 import { NextFunction, Request, Response } from "express";
-import { inject, injectable } from "inversify";
+import { inject } from "inversify";
+import { controller, httpGet, httpPost, httpPut } from "inversify-express-utils";
 import TYPES from "../config/types";
+import { userHasRole } from "../middleware/RoleMiddleware";
+import { User } from "../model/User";
 import { UserService } from "../service/UserService";
+import { auth } from "../util/Auth";
 import { UserRequest } from "../util/Request";
 
-export interface UserController {
-    newUser(req: Request, res: Response, next: NextFunction): void;
-    login(req: Request, res: Response, next: NextFunction): void;
-    current(req: Request, res: Response, next: NextFunction): void;
-    getUser(req: Request, res: Response, next: NextFunction): void;
-    getUsers(req: Request, res: Response, next: NextFunction): void;
-}
+@controller("/users")
+export class UserController {
 
-@injectable()
-export class UserControllerImpl implements UserController {
-
+    @inject(TYPES.UserService)
     private userService: UserService;
 
-    constructor(@inject(TYPES.UserService) userService: UserService) {
-        this.userService = userService;
-        this.newUser = this.newUser.bind(this);
-        this.login = this.login.bind(this);
-        this.current = this.current.bind(this);
-        this.getUser = this.getUser.bind(this);
-        this.getUsers = this.getUsers.bind(this);
-    }
-
+    @httpPost("/", auth.optional)
     public async newUser(req: Request, res: Response, next: NextFunction) {
         try {
             const createdUser = await this.userService.newUser(req.body);
@@ -35,10 +24,12 @@ export class UserControllerImpl implements UserController {
         }
     }
 
+    @httpPost("/login", auth.optional)
     public async login(req: Request, res: Response, next: NextFunction) {
         this.userService.login(req, res, next);
     }
 
+    @httpGet("/current", auth.required)
     public async current(req: UserRequest, res: Response, next: NextFunction) {
         try {
             const { payload: { id } } = req;
@@ -49,6 +40,7 @@ export class UserControllerImpl implements UserController {
         }
     }
 
+    @httpGet("/:userId", auth.required, userHasRole("admin"))
     public async getUser(req: UserRequest, res: Response, next: NextFunction) {
         try {
             const retUser = await this.userService.getUser(req.params.userId);
@@ -58,10 +50,51 @@ export class UserControllerImpl implements UserController {
         }
     }
 
+    @httpGet("/", auth.required, userHasRole("admin"))
     public async getUsers(req: UserRequest, res: Response, next: NextFunction) {
         try {
             const users = await this.userService.getUsers();
             res.json(users.map((user) => user.toJSON()));
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    @httpPut("/current", auth.required)
+    public async editCurrentUser(req: UserRequest, res: Response, next: NextFunction) {
+        try {
+            const currentUser = await this.userService.getUser(req.payload.id);
+            const userEdits = new User(
+                req.body.firstName,
+                req.body.lastName,
+                req.body.email,
+                currentUser.salt,
+                currentUser.hash,
+                currentUser.roles,
+                currentUser.id
+            );
+            const editedUser = await this.userService.editUser(userEdits);
+            res.json(editedUser);
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    @httpPut("/:userId", auth.required, userHasRole("admin"))
+    public async editUser(req: UserRequest, res: Response, next: NextFunction) {
+        try {
+            const currentUser = await this.userService.getUser(req.params.userId);
+            const userEdits = new User(
+                req.body.firstName,
+                req.body.lastName,
+                req.body.email,
+                currentUser.salt,
+                currentUser.hash,
+                currentUser.roles,
+                currentUser.id
+            );
+            const editedUser = await this.userService.editUser(userEdits);
+            res.json(editedUser);
         } catch (err) {
             next(err);
         }

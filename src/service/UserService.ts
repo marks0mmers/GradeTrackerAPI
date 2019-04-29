@@ -7,11 +7,12 @@ import { Role, toRole, toRoleDTO } from "../model/Role";
 import { User } from "../model/User";
 import { UserRepository } from "../repository/UserRepository";
 import { RoleDTO } from "../schema/RoleSchema";
-import { LoginDTO, NewUserDTO, UserDatabaseDTO, UserDTO } from "../schema/UserSchema";
+import { NewUserDTO, UserDatabaseDTO, UserDTO } from "../schema/UserSchema";
 import { RoleService } from "./RoleService";
 
 export interface UserService {
     newUser(user: NewUserDTO): Promise<User>;
+    editUser(user: User): Promise<User>;
     login(req: Request, res: Response, next: NextFunction): any;
     getUsers(): Promise<User[]>;
     getUser(id: string): Promise<User>;
@@ -36,6 +37,16 @@ export class UserServiceImpl implements UserService {
         newUser.roles = [];
         newUser.roles.push(defaultRole);
         return newUser;
+    }
+
+    public async editUser(user: User): Promise<User> {
+        const userToEdit = await this.userRepository.getUser(user.id);
+        userToEdit.email = user.email;
+        userToEdit.firstName = user.firstName;
+        userToEdit.lastName = user.lastName;
+        return await this.userRepository.editUser(userToEdit).then((u: UserDatabaseDTO) => {
+            return this.toUser(u);
+        });
     }
 
     public login(req: Request, res: Response, next: NextFunction) {

@@ -1,35 +1,20 @@
 import { NextFunction, Response } from "express";
-import { inject, injectable } from "inversify";
+import { inject } from "inversify";
+import { controller, httpDelete, httpGet, httpPost, httpPut } from "inversify-express-utils";
 import TYPES from "../config/types";
+import { userHasRole } from "../middleware/RoleMiddleware";
 import { Role } from "../model/Role";
 import { RoleService } from "../service/RoleService";
+import { auth } from "../util/Auth";
 import { UserRequest } from "../util/Request";
 
-export interface RoleController {
-    getAllRoles(req: UserRequest, res: Response, next: NextFunction): void;
-    getRole(req: UserRequest, res: Response, next: NextFunction): void;
-    createRole(req: UserRequest, res: Response, next: NextFunction): void;
-    updateRole(req: UserRequest, res: Response, next: NextFunction): void;
-    deleteRole(req: UserRequest, res: Response, next: NextFunction): void;
-}
+@controller("/roles", auth.required, userHasRole("admin"))
+export class RoleController {
 
-@injectable()
-export class RoleControllerImpl implements RoleController {
-
+    @inject(TYPES.RoleService)
     private roleService: RoleService;
 
-    constructor(
-        @inject(TYPES.RoleService) roleService: RoleService
-    ) {
-        this.roleService = roleService;
-
-        this.createRole = this.createRole.bind(this);
-        this.deleteRole = this.deleteRole.bind(this);
-        this.getAllRoles = this.getAllRoles.bind(this);
-        this.getRole = this.getRole.bind(this);
-        this.updateRole = this.updateRole.bind(this);
-    }
-
+    @httpGet("/user/:userId")
     public async getAllRoles(req: UserRequest, res: Response, next: NextFunction) {
         const userId: string = req.params.userId;
         try {
@@ -40,6 +25,7 @@ export class RoleControllerImpl implements RoleController {
         }
     }
 
+    @httpGet("/:roleId")
     public async getRole(req: UserRequest, res: Response, next: NextFunction) {
         const roleId: string = req.params.roleId;
         try {
@@ -50,6 +36,7 @@ export class RoleControllerImpl implements RoleController {
         }
     }
 
+    @httpPost("/user/:userId")
     public async createRole(req: UserRequest, res: Response, next: NextFunction) {
         const role = new Role(
             req.body.role,
@@ -63,6 +50,7 @@ export class RoleControllerImpl implements RoleController {
         }
     }
 
+    @httpPut("/:roleId")
     public async updateRole(req: UserRequest, res: Response, next: NextFunction) {
         const role = new Role(
             req.body.role,
@@ -77,6 +65,7 @@ export class RoleControllerImpl implements RoleController {
         }
     }
 
+    @httpDelete("/:roleId")
     public async deleteRole(req: UserRequest, res: Response, next: NextFunction) {
         const roleId = req.params.roleId;
         try {

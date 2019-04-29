@@ -2,29 +2,32 @@ import bodyParser = require("body-parser");
 import * as cors from "cors";
 import * as dotenv from "dotenv";
 import { Application, NextFunction, Request, Response } from "express";
-import * as express from "express";
 import * as session from "express-session";
 import * as helmet from "helmet";
+import { InversifyExpressServer } from "inversify-express-utils";
 import { connect } from "mongoose";
 import * as morgan from "morgan";
 import container from "./config/inversify.config";
-import TYPES from "./config/types";
-import { RegistrableRoute } from "./route/RegistrableRoute";
-import logger from "./util/Logger";
+
+import "./controller/CourseController";
+import "./controller/GradeCategoryController";
+import "./controller/GradeController";
+import "./controller/RoleController";
+import "./controller/UserController";
 
 export class App {
 
     private app: Application;
 
     constructor() {
-        this.app = express();
         this.config();
     }
 
     public listen() {
         // Listen on port 8000 for calls
         this.app.listen(process.env.PORT || 8000, () => {
-            logger.info("Grade Tracker API listening on port 8000!");
+            // tslint:disable-next-line:no-console
+            console.log("Grade Tracker API listening on port 8000!");
         });
     }
 
@@ -39,42 +42,41 @@ export class App {
         // Configure environment variables
         dotenv.config();
 
-        // Parse JSON data
-        this.app.use(bodyParser.json());
+        const server = new InversifyExpressServer(container, null, { rootPath: "/api" });
+        server.setConfig((app: Application) => {
+            // Parse JSON data
+            app.use(bodyParser.json());
 
-        // Enable cross site access
-        this.app.use(cors());
+            // Enable cross site access
+            app.use(cors());
 
-        // Register all routes
-        const routes: RegistrableRoute[] = container.getAll<RegistrableRoute>(TYPES.Route);
-        routes.forEach((route: RegistrableRoute) => route.register(this.app));
+            // Protect app from well known HTTP vulnerabilies
+            app.use(helmet());
 
-        // Decorate logging from winston
-        this.app.use(morgan("combined", { stream: logger.stream }));
+            // Add simple console logging with dev
+            app.use(morgan("common"));
 
-        // Protect app from well known HTTP vulnerabilies
-        this.app.use(helmet());
+            // Log all errors to the .logs and to the console
+            app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+                next(err);
+            });
 
-        // Log all errors to the .logs and to the console
-        this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-            logger.error(err.stack);
-            next(err);
+            // Report all errors as 500s and send the error message
+            app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+                res.status(500).send({message: err.message});
+            });
+
+            // Use a session to store all cookies for auth
+            app.use(
+                session({
+                    secret: "passport-tutorial",
+                    cookie: { maxAge: 60000 },
+                    resave: false,
+                    saveUninitialized: false
+                })
+            );
         });
-
-        // Report all errors as 500s and send the error message
-        this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-            res.status(500).send({message: err.message});
-        });
-
-        // Use a session to store all cookies for auth
-        this.app.use(
-            session({
-                secret: "passport-tutorial",
-                cookie: { maxAge: 60000 },
-                resave: false,
-                saveUninitialized: false
-            })
-        );
+        this.app = server.build();
     }
 
 }

@@ -1,35 +1,19 @@
 import { NextFunction, Response } from "express";
-import { inject, injectable } from "inversify";
+import { inject } from "inversify";
+import { controller, httpDelete, httpGet, httpPost, httpPut } from "inversify-express-utils";
 import TYPES from "../config/types";
 import { Grade } from "../model/Grade";
 import { GradeService } from "../service/GradeService";
+import { auth } from "../util/Auth";
 import { UserRequest } from "../util/Request";
 
-export interface GradeController {
-    getAllGrades(req: UserRequest, res: Response, next: NextFunction): void;
-    getGrade(req: UserRequest, res: Response, next: NextFunction): void;
-    createGrade(req: UserRequest, res: Response, next: NextFunction): void;
-    updateGrade(req: UserRequest, res: Response, next: NextFunction): void;
-    deleteGrade(req: UserRequest, res: Response, next: NextFunction): void;
-}
+@controller("/grades", auth.required)
+export class GradeController {
 
-@injectable()
-export class GradeControllerImpl implements GradeController {
-
+    @inject(TYPES.GradeService)
     private gradeService: GradeService;
 
-    constructor(
-        @inject(TYPES.GradeService) gradeService: GradeService
-    ) {
-        this.gradeService = gradeService;
-
-        this.createGrade = this.createGrade.bind(this);
-        this.deleteGrade = this.deleteGrade.bind(this);
-        this.getAllGrades = this.getAllGrades.bind(this);
-        this.getGrade = this.getGrade.bind(this);
-        this.updateGrade = this.updateGrade.bind(this);
-    }
-
+    @httpGet("/gradeCategory/:gradeCategoryId")
     public async getAllGrades(req: UserRequest, res: Response, next: NextFunction) {
         const gradeCategoryId: string = req.params.gradeCategoryId;
         try {
@@ -39,6 +23,8 @@ export class GradeControllerImpl implements GradeController {
             next(err);
         }
     }
+
+    @httpGet("/:gradeId")
     public async getGrade(req: UserRequest, res: Response, next: NextFunction) {
         const gradeId: string = req.params.gradeId;
         try {
@@ -48,6 +34,8 @@ export class GradeControllerImpl implements GradeController {
             next(err);
         }
     }
+
+    @httpPost("/gradeCategory/:gradeCategoryId")
     public async createGrade(req: UserRequest, res: Response, next: NextFunction) {
         const grade = new Grade(
             req.body.name,
@@ -61,6 +49,8 @@ export class GradeControllerImpl implements GradeController {
             next(err);
         }
     }
+
+    @httpPut("/:gradeId")
     public async updateGrade(req: UserRequest, res: Response, next: NextFunction) {
         const grade = new Grade(
             req.body.name,
@@ -75,6 +65,8 @@ export class GradeControllerImpl implements GradeController {
             next(err);
         }
     }
+
+    @httpDelete("/:gradeId")
     public async deleteGrade(req: UserRequest, res: Response, next: NextFunction) {
         const gradeId = req.params.gradeId;
         try {

@@ -29,9 +29,7 @@ export class GradeCategoryRepositoryImpl implements GradeCategoryRepository {
     }
 
     public async update(gradeCategoryDTO: GradeCategoryDTO): Promise<GradeCategoryDTO> {
-        return await gradeCategoryDatabase.findByIdAndUpdate(gradeCategoryDTO._id, gradeCategoryDTO, (err: Error, res: GradeCategoryDocument) => {
-            return res;
-        });
+        return await gradeCategoryDatabase.findByIdAndUpdate(gradeCategoryDTO._id, gradeCategoryDTO, (err: Error, res: GradeCategoryDocument) => res);
     }
 
     public async delete(id: string): Promise<GradeCategoryDTO> {

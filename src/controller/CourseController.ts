@@ -1,43 +1,25 @@
 import { NextFunction, Response } from "express";
-import { inject, injectable } from "inversify";
+import { inject } from "inversify";
+import { controller, httpDelete, httpGet, httpPost, httpPut } from "inversify-express-utils";
 import TYPES from "../config/types";
+import { userHasRole } from "../middleware/RoleMiddleware";
 import { Course } from "../model/Course";
 import { User } from "../model/User";
 import { CourseService } from "../service/CourseService";
 import { UserService } from "../service/UserService";
+import { auth } from "../util/Auth";
 import { UserRequest } from "../util/Request";
 
-export interface CourseController {
-    getCoursesCurrentUser(req: UserRequest, res: Response, next: NextFunction): void;
-    getCourse(req: UserRequest, res: Response, next: NextFunction): void;
-    newCourse(req: UserRequest, res: Response, next: NextFunction): void;
-    updateCourse(req: UserRequest, res: Response, next: NextFunction): void;
-    deleteCourse(req: UserRequest, res: Response, next: NextFunction): void;
-    getCoursesByUser(req: UserRequest, res: Response, next: NextFunction): void;
-}
+@controller("/courses", auth.required)
+export class CourseController {
 
-@injectable()
-export class CourseControllerImpl implements CourseController {
-
+    @inject(TYPES.CourseService)
     private courseService: CourseService;
 
+    @inject(TYPES.UserService)
     private userService: UserService;
 
-    constructor(
-        @inject(TYPES.CourseService) courseService: CourseService,
-        @inject(TYPES.UserService) userService: UserService
-    ) {
-        this.courseService = courseService;
-        this.userService = userService;
-
-        this.getCoursesCurrentUser = this.getCoursesCurrentUser.bind(this);
-        this.getCoursesByUser = this.getCoursesByUser.bind(this);
-        this.getCourse = this.getCourse.bind(this);
-        this.newCourse = this.newCourse.bind(this);
-        this.updateCourse = this.updateCourse.bind(this);
-        this.deleteCourse = this.deleteCourse.bind(this);
-    }
-
+    @httpGet("/")
     public async getCoursesCurrentUser(req: UserRequest, res: Response, next: NextFunction) {
         try {
             const courses = await this.courseService.getCoursesByUser(req.payload.id);
@@ -46,6 +28,8 @@ export class CourseControllerImpl implements CourseController {
             next(err);
         }
     }
+
+    @httpGet("/:id")
     public async getCourse(req: UserRequest, res: Response, next: NextFunction) {
         try {
             const course = await this.courseService.getCourse(req.params.id as string);
@@ -54,6 +38,8 @@ export class CourseControllerImpl implements CourseController {
             next(err);
         }
     }
+
+    @httpPost("/")
     public async newCourse(req: UserRequest, res: Response, next: NextFunction) {
         let user: User;
         try {
@@ -76,6 +62,8 @@ export class CourseControllerImpl implements CourseController {
             next(err);
         }
     }
+
+    @httpPut("/:id")
     public async updateCourse(req: UserRequest, res: Response, next: NextFunction) {
         const course = new Course(
             req.body.title,
@@ -93,6 +81,8 @@ export class CourseControllerImpl implements CourseController {
             next(err);
         }
     }
+
+    @httpDelete("/:id")
     public async deleteCourse(req: UserRequest, res: Response, next: NextFunction) {
         const id: string = req.params.id;
         try {
@@ -107,6 +97,7 @@ export class CourseControllerImpl implements CourseController {
         }
     }
 
+    @httpGet("/user/:userId", auth.required, userHasRole("admin"))
     public async getCoursesByUser(req: UserRequest, res: Response, next: NextFunction) {
         const { userId } = req.params;
         let user: User;
