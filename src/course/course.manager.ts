@@ -26,9 +26,8 @@ export class CourseManagerImpl implements CourseManager {
     }
 
     public async getCoursesByUser(id: string): Promise<Course[]> {
-        return await this.courseRepository.findAll().then((c: CourseDTO[]) => {
-            return c.map((course: CourseDTO) => toCourse(course))
-                .filter((course: Course) => course.userId === id);
+        return await this.courseRepository.findByUser(id).then((c: CourseDTO[]) => {
+            return c.map((course: CourseDTO) => toCourse(course));
         });
     }
 

@@ -14,6 +14,7 @@ export const authMiddleware = async (request: RequestWithUser & Request, respons
             const user = await userDatabase.findById(id);
             if (user) {
                 request.user = user;
+                request.user._id = request.user._id.toString();
                 next();
             } else {
                 next(new WrongAuthentificationTokenException());
