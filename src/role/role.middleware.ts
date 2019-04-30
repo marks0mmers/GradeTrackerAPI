@@ -1,5 +1,4 @@
-import { NextFunction } from "connect";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { RequestWithUser } from "../auth/Auth";
 import { RoleException } from "../exceptions/RoleException";
 import { RoleDTO } from "../role/role.schema";
