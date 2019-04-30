@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import TYPES from "../config/types";
+import { UserException } from "../exceptions/UserException";
 import { RoleManager } from "../role/role.manager";
 import { Role, toRole, toRoleDTO } from "../role/role.model";
 import { User } from "./user.model";
@@ -25,6 +26,10 @@ export class UserManagerImpl implements UserManager {
 
     public async newUser(user: NewUserDTO): Promise<User> {
         const createdUser = new User(user.firstName, user.lastName, user.email, "");
+        const userAlreadyExists = await this.userRepository.getUserByEmail(createdUser.email);
+        if (userAlreadyExists) {
+            throw new UserException("User Already Exists with the email: " + user.email);
+        }
         createdUser.setPassword(user.password);
         const newUser = await this.userRepository.newUser(this.toUserDto(createdUser)).then((u: UserDatabaseDTO) => {
             return this.toUser(u);
