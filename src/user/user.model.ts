@@ -35,7 +35,18 @@ export class User {
         };
     }
 
-    public toJSON(): UserDTO {
+    public toAuthJSON(): UserDTO {
+        return {
+            _id: this.id,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            token: this.generateJWT().token,
+            roles: this.roles.map((role: Role) => toRoleDTO(role))
+        };
+    }
+
+    public toJSON() {
         return {
             _id: this.id,
             firstName: this.firstName,

@@ -13,7 +13,3 @@ export interface DataStoredInToken {
 export interface RequestWithUser extends Request {
   user: UserDatabaseDTO;
 }
-
-export const createCookie = (tokenData: TokenData) => {
-    return `Authorization=${tokenData.token}; HttpOnly; Path="/"; Max-Age=${tokenData.expiresIn}`;
-};

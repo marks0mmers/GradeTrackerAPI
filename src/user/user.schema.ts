@@ -6,6 +6,7 @@ export interface UserDTO {
     firstName: string;
     lastName: string;
     email: string;
+    token: string;
     roles?: RoleDTO[];
 }
 
