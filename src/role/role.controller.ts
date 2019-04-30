@@ -1,4 +1,4 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { inject } from "inversify";
 import { controller, httpDelete, httpGet, httpPost, httpPut } from "inversify-express-utils";
 import { RequestWithUser } from "../auth/Auth";
@@ -16,7 +16,7 @@ export class RoleController {
     private roleManager: RoleManager;
 
     @httpGet("/user/:userId")
-    public async getAllRoles(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getAllRoles(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const userId: string = req.params.userId;
         try {
             const roles = await this.roleManager.getRolesForUser(userId);
@@ -27,7 +27,7 @@ export class RoleController {
     }
 
     @httpGet("/:roleId")
-    public async getRole(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getRole(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const roleId: string = req.params.roleId;
         try {
             const role = await this.roleManager.getRole(roleId);
@@ -38,7 +38,7 @@ export class RoleController {
     }
 
     @httpPost("/user/:userId")
-    public async createRole(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async createRole(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const role = new Role(
             req.body.role,
             req.params.userId
@@ -52,7 +52,7 @@ export class RoleController {
     }
 
     @httpPut("/:roleId")
-    public async updateRole(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async updateRole(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const role = new Role(
             req.body.role,
             req.body.userId,
@@ -67,7 +67,7 @@ export class RoleController {
     }
 
     @httpDelete("/:roleId")
-    public async deleteRole(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async deleteRole(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const roleId = req.params.roleId;
         try {
             const deletedRole = await this.roleManager.deleteRole(roleId);

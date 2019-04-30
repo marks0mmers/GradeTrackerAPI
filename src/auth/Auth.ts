@@ -6,10 +6,18 @@ export interface TokenData {
     expiresIn: number;
 }
 
+export const getTokenFromHeaders = (req: Request): string => {
+    const { headers: { authorization } } = req;
+    if (authorization && authorization.split(" ")[0] === "Bearer") {
+        return authorization.split(" ")[1];
+    }
+    return null;
+};
+
 export interface DataStoredInToken {
     id: string;
 }
 
-export interface RequestWithUser extends Request {
+export interface RequestWithUser {
   user: UserDatabaseDTO;
 }

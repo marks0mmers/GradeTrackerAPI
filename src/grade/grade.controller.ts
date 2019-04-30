@@ -1,4 +1,4 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { inject } from "inversify";
 import { controller, httpDelete, httpGet, httpPost, httpPut } from "inversify-express-utils";
 import { RequestWithUser } from "../auth/Auth";
@@ -15,7 +15,7 @@ export class GradeController {
     private gradeManager: GradeManager;
 
     @httpGet("/gradeCategory/:gradeCategoryId")
-    public async getAllGrades(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getAllGrades(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const gradeCategoryId: string = req.params.gradeCategoryId;
         try {
             const grades = await this.gradeManager.getGradesFromCategory(gradeCategoryId);
@@ -26,7 +26,7 @@ export class GradeController {
     }
 
     @httpGet("/:gradeId")
-    public async getGrade(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getGrade(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const gradeId: string = req.params.gradeId;
         try {
             const grade = await this.gradeManager.getGrade(gradeId);
@@ -37,7 +37,7 @@ export class GradeController {
     }
 
     @httpPost("/gradeCategory/:gradeCategoryId")
-    public async createGrade(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async createGrade(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const grade = new Grade(
             req.body.name,
             req.body.grade,
@@ -52,7 +52,7 @@ export class GradeController {
     }
 
     @httpPut("/:gradeId")
-    public async updateGrade(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async updateGrade(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const grade = new Grade(
             req.body.name,
             req.body.grade,
@@ -68,7 +68,7 @@ export class GradeController {
     }
 
     @httpDelete("/:gradeId")
-    public async deleteGrade(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async deleteGrade(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const gradeId = req.params.gradeId;
         try {
             const deletedGrade = await this.gradeManager.deleteGrade(gradeId);

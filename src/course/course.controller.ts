@@ -1,4 +1,4 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { inject } from "inversify";
 import { controller, httpDelete, httpGet, httpPost, httpPut } from "inversify-express-utils";
 import { RequestWithUser } from "../auth/Auth";
@@ -22,7 +22,7 @@ export class CourseController {
     private userManager: UserManager;
 
     @httpGet("/")
-    public async getCoursesCurrentUser(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getCoursesCurrentUser(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
             const courses = await this.courseManager.getCoursesByUser(req.user._id);
             res.json(courses);
@@ -32,7 +32,7 @@ export class CourseController {
     }
 
     @httpGet("/:id")
-    public async getCourse(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getCourse(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
             const course = await this.courseManager.getCourse(req.params.id as string);
             res.json(course);
@@ -42,7 +42,7 @@ export class CourseController {
     }
 
     @httpPost("/")
-    public async newCourse(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async newCourse(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         let user: User;
         try {
             user = await this.userManager.getUser(req.user._id);
@@ -66,7 +66,7 @@ export class CourseController {
     }
 
     @httpPut("/:id")
-    public async updateCourse(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async updateCourse(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const course = new Course(
             req.body.title,
             req.body.description,
@@ -85,7 +85,7 @@ export class CourseController {
     }
 
     @httpDelete("/:id")
-    public async deleteCourse(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async deleteCourse(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const id: string = req.params.id;
         try {
             const deletedCourse = await this.courseManager.deleteCourse(id);
@@ -100,7 +100,7 @@ export class CourseController {
     }
 
     @httpGet("/user/:userId", userHasRole("admin"))
-    public async getCoursesByUser(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getCoursesByUser(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const { userId } = req.params;
         try {
             const courses = await this.courseManager.getCoursesByUser(userId);

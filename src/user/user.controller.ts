@@ -36,7 +36,7 @@ export class UserController {
     }
 
     @httpGet("/current", authMiddleware)
-    public async current(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async current(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
             const id = req.user._id;
             const user = await this.userManager.getUser(id);
@@ -47,7 +47,7 @@ export class UserController {
     }
 
     @httpGet("/:userId", authMiddleware, userHasRole("admin"))
-    public async getUser(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getUser(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
             const retUser = await this.userManager.getUser(req.params.userId);
             res.json(retUser.toJSON());
@@ -57,7 +57,7 @@ export class UserController {
     }
 
     @httpGet("/", authMiddleware, userHasRole("admin"))
-    public async getUsers(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getUsers(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
             const users = await this.userManager.getUsers();
             res.json(users.map((user) => user.toJSON()));
@@ -67,7 +67,7 @@ export class UserController {
     }
 
     @httpPut("/current", authMiddleware)
-    public async editCurrentUser(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async editCurrentUser(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
             const currentUser = await this.userManager.getUser(req.user._id);
             const userEdits = new User(
@@ -86,7 +86,7 @@ export class UserController {
     }
 
     @httpPut("/:userId", authMiddleware, userHasRole("admin"))
-    public async editUser(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async editUser(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
             const currentUser = await this.userManager.getUser(req.params.userId);
             const userEdits = new User(

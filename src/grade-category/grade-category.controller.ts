@@ -1,4 +1,4 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { inject } from "inversify";
 import { controller, httpDelete, httpGet, httpPost, httpPut } from "inversify-express-utils";
 import { RequestWithUser } from "../auth/Auth";
@@ -15,7 +15,7 @@ export class GradeCategoryController {
     private gradeCategoryManager: GradeCategoryManager;
 
     @httpGet("/")
-    public async getAllForCurrentUser(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getAllForCurrentUser(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const userId = req.user._id;
         try {
             const gradeCategories = await this.gradeCategoryManager.getAllForUser(userId);
@@ -26,7 +26,7 @@ export class GradeCategoryController {
     }
 
     @httpGet("/course/:courseId")
-    public async getAllByCourse(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getAllByCourse(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const courseId = req.params.courseId;
         try {
             const gradeCategories = await this.gradeCategoryManager.getAll(courseId);
@@ -37,7 +37,7 @@ export class GradeCategoryController {
     }
 
     @httpGet("/:id")
-    public async getOne(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async getOne(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const categoryId = req.params.id;
         try {
             const gradeCategory = await this.gradeCategoryManager.getOne(categoryId);
@@ -48,7 +48,7 @@ export class GradeCategoryController {
     }
 
     @httpPost("/course/:courseId")
-    public async create(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async create(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const gradeCategory = new GradeCategory(
             req.body.title,
             req.body.percentage,
@@ -65,7 +65,7 @@ export class GradeCategoryController {
     }
 
     @httpPut("/:id")
-    public async update(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async update(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const gradeCategory = new GradeCategory(
             req.body.title,
             req.body.percentage,
@@ -83,7 +83,7 @@ export class GradeCategoryController {
     }
 
     @httpDelete("/:id")
-    public async delete(req: RequestWithUser, res: Response, next: NextFunction) {
+    public async delete(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const id: string = req.params.id;
         try {
             const deletedCourse = await this.gradeCategoryManager.delete(id);
