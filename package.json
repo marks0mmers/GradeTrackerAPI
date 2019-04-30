@@ -19,7 +19,9 @@
   "dependencies": {
     "@types/app-root-path": "^1.2.4",
     "app-root-path": "^2.2.1",
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
@@ -29,7 +31,7 @@
     "inversify": "^5.0.1",
     "inversify-express-utils": "^6.3.2",
     "inversify-logger-middleware": "^3.1.0",
-    "jsonwebtoken": "^8.4.0",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "mongoose": "^5.4.11",
     "morgan": "^1.9.1",
@@ -42,7 +44,9 @@
     "typescript": "^3.2.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/bluebird": "^3.5.25",
+    "@types/cookie-parser": "^1.4.1",
     "@types/cors": "^2.8.4",
     "@types/dotenv": "^6.1.0",
     "@types/express": "^4.16.0",
@@ -50,6 +54,7 @@
     "@types/express-session": "^1.15.11",
     "@types/helmet": "^0.0.42",
     "@types/inversify": "^2.0.33",
+    "@types/jsonwebtoken": "^8.3.2",
     "@types/lodash": "^4.14.120",
     "@types/mongodb": "^3.1.19",
     "@types/mongoose": "^5.3.12",

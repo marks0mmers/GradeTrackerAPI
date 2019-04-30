@@ -1,18 +1,18 @@
 const TYPES = {
     CourseRepository: Symbol("CourseRepository"),
-    CourseService: Symbol("CourseService"),
+    CourseManager: Symbol("CourseManager"),
 
     UserRepository: Symbol("UserRepository"),
-    UserService: Symbol("UserService"),
+    UserManager: Symbol("UserManager"),
 
     RoleRepository: Symbol("RoleRepository"),
-    RoleService: Symbol("RoleService"),
+    RoleManager: Symbol("RoleManager"),
 
     GradeCategoryRepository: Symbol("GradeCategoryRepository"),
-    GradeCategoryService: Symbol("GradeCategoryService"),
+    GradeCategoryManager: Symbol("GradeCategoryManager"),
 
     GradeRepository: Symbol("GradeRepository"),
-    GradeService: Symbol("GradeService")
+    GradeManager: Symbol("GradeManager")
 };
 
 export default TYPES;

@@ -1,32 +1,31 @@
 import { Container } from "inversify";
-import { makeLoggerMiddleware } from "inversify-logger-middleware";
-import { CourseRepository, CourseRepositoryImpl } from "../repository/CourseRepository";
-import { GradeCategoryRepository, GradeCategoryRepositoryImpl } from "../repository/GradeCategoryRepository";
-import { GradeRepository, GradeRepositoryImpl } from "../repository/GradeRepository";
-import { RoleRepository, RoleRepositoryImpl } from "../repository/RoleRepository";
-import { UserRepository, UserRepositoryImpl } from "../repository/UserRepository";
-import { CourseService, CourseServiceImpl } from "../service/CourseService";
-import { GradeCategoryService, GradeCategoryServiceImpl } from "../service/GradeCategoryService";
-import { GradeService, GradeServiceImpl } from "../service/GradeService";
-import { RoleService, RoleServiceImpl } from "../service/RoleService";
-import { UserService, UserServiceImpl } from "../service/UserService";
+import { CourseManager, CourseManagerImpl } from "../course/course.manager";
+import { CourseRepository, CourseRepositoryImpl } from "../course/course.repository";
+import { GradeCategoryManager, GradeCategoryManagerImpl } from "../grade-category/grade-category.manager";
+import { GradeCategoryRepository, GradeCategoryRepositoryImpl } from "../grade-category/grade-category.repository";
+import { GradeManager, GradeManagerImpl } from "../grade/grade.manager";
+import { GradeRepository, GradeRepositoryImpl } from "../grade/grade.repository";
+import { RoleManager, RoleManagerImpl } from "../role/role.manager";
+import { RoleRepository, RoleRepositoryImpl } from "../role/role.repository";
+import { UserManager, UserManagerImpl } from "../user/user.manager";
+import { UserRepository, UserRepositoryImpl } from "../user/user.repository";
 import TYPES from "./types";
 
 const container = new Container();
 
-container.bind<CourseService>(TYPES.CourseService).to(CourseServiceImpl);
+container.bind<CourseManager>(TYPES.CourseManager).to(CourseManagerImpl);
 container.bind<CourseRepository>(TYPES.CourseRepository).to(CourseRepositoryImpl);
 
-container.bind<UserService>(TYPES.UserService).to(UserServiceImpl);
+container.bind<UserManager>(TYPES.UserManager).to(UserManagerImpl);
 container.bind<UserRepository>(TYPES.UserRepository).to(UserRepositoryImpl);
 
-container.bind<RoleService>(TYPES.RoleService).to(RoleServiceImpl);
+container.bind<RoleManager>(TYPES.RoleManager).to(RoleManagerImpl);
 container.bind<RoleRepository>(TYPES.RoleRepository).to(RoleRepositoryImpl);
 
-container.bind<GradeCategoryService>(TYPES.GradeCategoryService).to(GradeCategoryServiceImpl);
+container.bind<GradeCategoryManager>(TYPES.GradeCategoryManager).to(GradeCategoryManagerImpl);
 container.bind<GradeCategoryRepository>(TYPES.GradeCategoryRepository).to(GradeCategoryRepositoryImpl);
 
-container.bind<GradeService>(TYPES.GradeService).to(GradeServiceImpl);
+container.bind<GradeManager>(TYPES.GradeManager).to(GradeManagerImpl);
 container.bind<GradeRepository>(TYPES.GradeRepository).to(GradeRepositoryImpl);
 
 export default container;
