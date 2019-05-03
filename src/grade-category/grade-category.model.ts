@@ -11,8 +11,8 @@ export class GradeCategory {
         public percentage: number,
         public numberOfGrades: number,
         public courseId: string,
-        public id?: string,
-        public grades?: Grade[]
+        public grades: Grade[],
+        public id?: string
     ) {}
 
     public calculateGrades(): GradeCategory {

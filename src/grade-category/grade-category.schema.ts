@@ -7,7 +7,7 @@ export interface GradeCategoryDTO {
     percentage: number;
     numberOfGrades: number;
     courseId: string;
-    grades?: GradeDTO[];
+    grades: GradeDTO[];
 }
 
 export interface GradeCategoryDocument extends Document {
@@ -16,7 +16,7 @@ export interface GradeCategoryDocument extends Document {
     percentage: number;
     numberOfGrades: number;
     courseId: string;
-    grades?: any[];
+    grades: any[];
 }
 
 const gradeCategorySchema = new Schema({

@@ -72,8 +72,8 @@ export class GradeCategoryManagerImpl implements GradeCategoryManager {
             gradeCategoryDTO.percentage,
             gradeCategoryDTO.numberOfGrades,
             gradeCategoryDTO.courseId,
-            gradeCategoryDTO._id,
-            gradeCategoryDTO.grades && gradeCategoryDTO.grades.map((g) => toGrade(g))
+            gradeCategoryDTO.grades && gradeCategoryDTO.grades.map((g) => toGrade(g)),
+            gradeCategoryDTO._id
         );
     }
 
