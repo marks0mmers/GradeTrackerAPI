@@ -71,7 +71,8 @@ export class GradeCategoryController {
             req.body.percentage,
             req.body.numberOfGrades,
             req.body.courseId,
-            req.params.id
+            req.params.id,
+            req.params.grades
         );
 
         try {
