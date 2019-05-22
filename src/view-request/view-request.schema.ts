@@ -1,6 +1,6 @@
 import { Document, model, Schema } from "mongoose";
 export interface ViewRequestDTO {
-    _id: string;
+    _id?: string;
     status: number;
     requester: string;
     reciever: string;
