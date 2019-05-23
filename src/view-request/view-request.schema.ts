@@ -3,14 +3,14 @@ export interface ViewRequestDTO {
     _id?: string;
     status: number;
     requester: string;
-    reciever: string;
+    receiver: string;
 }
 
 export interface ViewRequestDocument extends Document {
     _id: string;
     status: number;
     requester: string;
-    reciever: string;
+    receiver: string;
 }
 
 const viewRequestSchema = new Schema({
@@ -24,7 +24,7 @@ const viewRequestSchema = new Schema({
         type: String,
         required: true
     },
-    reciever: {
+    receiver: {
         type: String,
         required: true
     }

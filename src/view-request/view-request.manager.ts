@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import TYPES from "../config/types";
 import { ViewRequestException } from "../exceptions/ViewRequestException";
-import { ViewRequestRepository } from "./view-requeest.repository";
 import { ViewRequest } from "./view-request.model";
+import { ViewRequestRepository } from "./view-request.repository";
 import { ViewRequestDTO } from "./view-request.schema";
 import { ViewRequestStatus } from "./view-request.statuses";
 
@@ -23,7 +23,7 @@ export class ViewRequestManagerImpl implements ViewRequestManager {
     public async getAllForReceiver(receiverId: string): Promise<ViewRequest[]> {
         return await this.viewRequestRepository.findAll()
             .then((requests: ViewRequestDTO[]) => requests.map((r: ViewRequestDTO) => toViewRequest(r)))
-            .then((requests: ViewRequest[]) => requests.filter((r: ViewRequest) => r.reciever === receiverId));
+            .then((requests: ViewRequest[]) => requests.filter((r: ViewRequest) => r.receiver === receiverId));
     }
     public async  getAllForRequester(requesterId: string): Promise<ViewRequest[]> {
         return await this.viewRequestRepository.findAll()
@@ -33,7 +33,7 @@ export class ViewRequestManagerImpl implements ViewRequestManager {
     public async sendUserViewRequest(currentUserId: string, userToRequest: string): Promise<ViewRequest> {
         const newRequest: ViewRequestDTO = {
             requester: currentUserId,
-            reciever: userToRequest,
+            receiver: userToRequest,
             status: ViewRequestStatus.SENT
         };
 
@@ -43,7 +43,7 @@ export class ViewRequestManagerImpl implements ViewRequestManager {
     public async approveViewRequest(requestId: string, currentUserId: string): Promise<ViewRequest> {
         const requestToApprove = await this.viewRequestRepository.find(requestId);
 
-        if (requestToApprove.reciever !== currentUserId) {
+        if (requestToApprove.receiver !== currentUserId) {
             throw new ViewRequestException("Cannot Approve a Request that is not yours");
         }
 
@@ -55,7 +55,7 @@ export class ViewRequestManagerImpl implements ViewRequestManager {
     public async denyViewRequest(requestId: string, currentUserId: string): Promise<ViewRequest> {
         const requestToApprove = await this.viewRequestRepository.find(requestId);
 
-        if (requestToApprove.reciever !== currentUserId) {
+        if (requestToApprove.receiver !== currentUserId) {
             throw new ViewRequestException("Cannot Deny a Request that is not yours");
         }
 
@@ -68,5 +68,5 @@ export class ViewRequestManagerImpl implements ViewRequestManager {
 }
 
 const toViewRequest = (dto: ViewRequestDTO) => {
-    return new ViewRequest(dto.requester, dto.reciever, dto.status, dto._id);
+    return new ViewRequest(dto.requester, dto.receiver, dto.status, dto._id);
 };

@@ -15,6 +15,7 @@ import "./grade-category/grade-category.controller";
 import "./grade/grade.controller";
 import "./role/role.controller";
 import "./user/user.controller";
+import "./view-request/view-request.controller";
 
 export class App {
 

@@ -9,7 +9,8 @@ import { RoleManager, RoleManagerImpl } from "../role/role.manager";
 import { RoleRepository, RoleRepositoryImpl } from "../role/role.repository";
 import { UserManager, UserManagerImpl } from "../user/user.manager";
 import { UserRepository, UserRepositoryImpl } from "../user/user.repository";
-import { ViewRequestRepository, ViewRequestRepositoryImpl } from "../view-request/view-requeest.repository";
+import { ViewRequestManager, ViewRequestManagerImpl } from "../view-request/view-request.manager";
+import { ViewRequestRepository, ViewRequestRepositoryImpl } from "../view-request/view-request.repository";
 import TYPES from "./types";
 
 const container = new Container();
@@ -27,6 +28,7 @@ container.bind<GradeCategoryManager>(TYPES.GradeCategoryManager).to(GradeCategor
 container.bind<GradeCategoryRepository>(TYPES.GradeCategoryRepository).to(GradeCategoryRepositoryImpl);
 
 container.bind<ViewRequestRepository>(TYPES.ViewRequestRepository).to(ViewRequestRepositoryImpl);
+container.bind<ViewRequestManager>(TYPES.ViewRequestManager).to(ViewRequestManagerImpl);
 
 container.bind<GradeManager>(TYPES.GradeManager).to(GradeManagerImpl);
 container.bind<GradeRepository>(TYPES.GradeRepository).to(GradeRepositoryImpl);
