@@ -11,6 +11,9 @@ const TYPES = {
     GradeCategoryRepository: Symbol("GradeCategoryRepository"),
     GradeCategoryManager: Symbol("GradeCategoryManager"),
 
+    ViewRequestRepository: Symbol("ViewRequestRepository"),
+    ViewRequestManager: Symbol("ViewRequestManager"),
+
     GradeRepository: Symbol("GradeRepository"),
     GradeManager: Symbol("GradeManager")
 };
