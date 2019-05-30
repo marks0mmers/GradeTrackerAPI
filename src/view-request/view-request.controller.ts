@@ -2,11 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { inject } from "inversify";
 import { controller, httpGet, httpPost } from "inversify-express-utils";
 import { RequestWithUser } from "../auth/Auth";
+import { authMiddleware } from "../auth/auth.middleware";
 import TYPES from "../config/types";
 import { ViewRequestException } from "../exceptions/ViewRequestException";
 import { ViewRequestManager } from "./view-request.manager";
 
-@controller("/viewRequests")
+@controller("/viewRequests", authMiddleware)
 export class ViewRequestController {
 
     @inject(TYPES.ViewRequestManager)
