@@ -16,7 +16,7 @@ export class ViewRequestController {
     @httpGet("/forMeToRespond")
     public async getAllForReceiver(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
-            const requests = await this.viewRequestManager.getAllForReceiver(req.user._id);
+            const requests = await this.viewRequestManager.getAllForReceiver(req.user._id.toString());
             res.json(requests);
         } catch (err) {
             if (err) {
@@ -30,7 +30,7 @@ export class ViewRequestController {
     @httpGet("/sent")
     public async getAllForRequester(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
-            const requests = await this.viewRequestManager.getAllForRequester(req.user._id);
+            const requests = await this.viewRequestManager.getAllForRequester(req.user._id.toString());
             res.json(requests);
         } catch (err) {
             if (err) {
@@ -44,7 +44,7 @@ export class ViewRequestController {
     @httpPost("/send/user/:userId")
     public async createRequest(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
-            const request = await this.viewRequestManager.sendUserViewRequest(req.user._id, req.params.userId);
+            const request = await this.viewRequestManager.sendUserViewRequest(req.user._id.toString(), req.params.userId);
             res.json(request);
         } catch (err) {
             if (err) {
@@ -58,7 +58,7 @@ export class ViewRequestController {
     @httpPost("/approve/:id")
     public async approveRequest(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
-            const request = await this.viewRequestManager.approveViewRequest(req.params.id, req.user._id);
+            const request = await this.viewRequestManager.approveViewRequest(req.params.id, req.user._id.toString());
             res.json(request);
         } catch (err) {
             if (err) {
@@ -72,7 +72,7 @@ export class ViewRequestController {
     @httpPost("/deny/:id")
     public async denyRequest(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
-            const request = await this.viewRequestManager.denyViewRequest(req.params.id, req.user._id);
+            const request = await this.viewRequestManager.denyViewRequest(req.params.id, req.user._id.toString());
             res.json(request);
         } catch (err) {
             if (err) {
