@@ -56,7 +56,7 @@ export class UserController {
         }
     }
 
-    @httpGet("/", authMiddleware, userHasRole("admin"))
+    @httpGet("/", authMiddleware)
     public async getUsers(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
             const users = await this.userManager.getUsers();
