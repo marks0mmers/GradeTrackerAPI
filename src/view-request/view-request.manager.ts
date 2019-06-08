@@ -9,6 +9,7 @@ import { ViewRequestStatus } from "./view-request.statuses";
 export interface ViewRequestManager {
     getAllForReceiver(receiverId: string): Promise<ViewRequest[]>;
     getAllForRequester(requesterId: string): Promise<ViewRequest[]>;
+    checkIfRequestExists(requesterId: string, receiverId: string): Promise<ViewRequest>;
     sendUserViewRequest(currentUserId: string, userToRequest: string): Promise<ViewRequest>;
     approveViewRequest(requestId: string, currentUserId: string): Promise<ViewRequest>;
     denyViewRequest(requestId: string, currentUserId: string): Promise<ViewRequest>;
@@ -30,6 +31,16 @@ export class ViewRequestManagerImpl implements ViewRequestManager {
             .then((requests) => requests.map((r) => toViewRequest(r)))
             .then((requests) => requests.filter((r) => r.requester === requesterId));
     }
+
+    public async checkIfRequestExists(requesterId: string, receiverId: string) {
+        const allForRequester =  await this.getAllForRequester(requesterId);
+        const req = allForRequester.find((vr) => vr.receiver === receiverId);
+        if (!req) {
+            throw new ViewRequestException("You do not have that users permission");
+        }
+        return req;
+    }
+
     public async sendUserViewRequest(currentUserId: string, userToRequest: string): Promise<ViewRequest> {
         const newRequest: ViewRequestDTO = {
             requester: currentUserId,

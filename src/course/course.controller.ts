@@ -24,7 +24,7 @@ export class CourseController {
     @httpGet("/")
     public async getCoursesCurrentUser(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         try {
-            const courses = await this.courseManager.getCoursesByUser(req.user._id);
+            const courses = await this.courseManager.getCoursesCurrentUser(req.user._id);
             res.json(courses);
         } catch {
             next(new CourseException("Cannot Get Courses for current user"));
@@ -99,14 +99,15 @@ export class CourseController {
         }
     }
 
-    @httpGet("/user/:userId", userHasRole("admin"))
+    @httpGet("/user/:userId")
     public async getCoursesByUser(req: RequestWithUser & Request, res: Response, next: NextFunction) {
-        const { userId } = req.params;
+        const { userToGet } = req.params;
+        const currentUser = req.user._id.toString();
         try {
-            const courses = await this.courseManager.getCoursesByUser(userId);
+            const courses = await this.courseManager.getCoursesByUser(currentUser, userToGet);
             res.json(courses);
         } catch {
-            next(new CourseException("Cannot get courses for user: " + userId));
+            next(new CourseException("Cannot get courses for user: " + userToGet));
         }
     }
 
