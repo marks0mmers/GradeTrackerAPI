@@ -27,7 +27,7 @@ export class GradeCategoryManagerImpl implements GradeCategoryManager {
     private courseManager: CourseManager;
 
     public async getAllForUser(userId: string): Promise<GradeCategory[]> {
-        const courses = await this.courseManager.getCoursesByUser(userId);
+        const courses = await this.courseManager.getCoursesCurrentUser(userId);
         const courseIds = courses.map((c: Course) => c.id);
         return await this.gradeCategoryRepository.findAll()
             .then((categories: GradeCategoryDTO[]) => categories.map((g: GradeCategoryDTO) => this.toGradeCategory(g).calculateGrades()))
