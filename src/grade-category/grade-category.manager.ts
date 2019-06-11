@@ -29,41 +29,35 @@ export class GradeCategoryManagerImpl implements GradeCategoryManager {
     public async getAllForUser(userId: string): Promise<GradeCategory[]> {
         const courses = await this.courseManager.getCoursesByUser(userId);
         const courseIds = courses.map((c: Course) => c.id);
-        return await this.gradeCategoryRepository.findAll()
-            .then((categories: GradeCategoryDTO[]) => categories.map((g: GradeCategoryDTO) => this.toGradeCategory(g).calculateGrades()))
-            .then((categories: GradeCategory[]) => categories.filter((g: GradeCategory) => {
-                return courseIds.indexOf(new ObjectId(g.courseId).toHexString()) >= 0;
-            }));
+        return await this.gradeCategoryRepository.findAll().then((categories) => categories
+            .map(this.toGradeCategory)
+            .filter((g) => courseIds.indexOf(g.courseId) > 0)
+        );
     }
 
     public async getAll(courseId: string): Promise<GradeCategory[]> {
-        return await this.gradeCategoryRepository.findAll()
-            .then((categories: GradeCategoryDTO[]) => categories.map((g: GradeCategoryDTO) => this.toGradeCategory(g).calculateGrades()))
-            .then((categories: GradeCategory[]) => categories.filter((g: GradeCategory) => {
-                return new ObjectId(g.courseId).toHexString() === courseId;
-            }));
+        return await this.gradeCategoryRepository.findAll().then((categories) => categories
+            .map(this.toGradeCategory)
+            .filter((g) => g.courseId === courseId)
+        );
     }
 
     public async getOne(id: string): Promise<GradeCategory> {
-        return await this.gradeCategoryRepository.find(id)
-            .then((g: GradeCategoryDTO) => this.toGradeCategory(g).calculateGrades());
+        return await this.gradeCategoryRepository.find(id).then(this.toGradeCategory);
     }
 
     public async create(gradeCategory: GradeCategory): Promise<GradeCategory> {
         const gradeCategoryDTO = this.toGradeCategoryDTO(gradeCategory);
-        return await this.gradeCategoryRepository.create(gradeCategoryDTO)
-            .then((g: GradeCategoryDTO) => this.toGradeCategory(g).calculateGrades());
+        return await this.gradeCategoryRepository.create(gradeCategoryDTO).then(this.toGradeCategory);
     }
 
     public async update(gradeCategory: GradeCategory): Promise<GradeCategory> {
         const gradeCategoryDTO = this.toGradeCategoryDTO(gradeCategory);
-        return await this.gradeCategoryRepository.update(gradeCategoryDTO)
-            .then((g: GradeCategoryDTO) => this.toGradeCategory(g).calculateGrades());
+        return await this.gradeCategoryRepository.update(gradeCategoryDTO).then(this.toGradeCategory);
     }
 
     public async delete(id: string): Promise<GradeCategory> {
-        return await this.gradeCategoryRepository.delete(id)
-            .then((g: GradeCategoryDTO) => this.toGradeCategory(g).calculateGrades());
+        return await this.gradeCategoryRepository.delete(id).then(this.toGradeCategory);
     }
 
     private toGradeCategory(gradeCategoryDTO: GradeCategoryDTO): GradeCategory {
@@ -74,7 +68,7 @@ export class GradeCategoryManagerImpl implements GradeCategoryManager {
             gradeCategoryDTO.courseId,
             gradeCategoryDTO.grades && gradeCategoryDTO.grades.map((g) => toGrade(g)),
             gradeCategoryDTO._id
-        );
+        ).calculateGrades();
     }
 
     private toGradeCategoryDTO(gradeCategory: GradeCategory): GradeCategoryDTO {

@@ -19,31 +19,28 @@ export class GradeManagerImpl implements GradeManager {
     private gradeRepository: GradeRepository;
 
     public async getGradesFromCategory(gradeCategoryId: string): Promise<Grade[]> {
-        return await this.gradeRepository.findAll()
-            .then((dtos: GradeDTO[]) => dtos.map((dto) => toGrade(dto)))
-            .then((grades: Grade[]) => grades.filter((grade: Grade) => grade.gradeCategoryId === gradeCategoryId));
+        return await this.gradeRepository.findAll().then((grades) => grades
+            .map(toGrade)
+            .filter((g) => g.gradeCategoryId === gradeCategoryId)
+        );
     }
 
     public async getGrade(gradeId: string): Promise<Grade> {
-        return await this.gradeRepository.find(gradeId)
-            .then((grade: GradeDTO) => toGrade(grade));
+        return await this.gradeRepository.find(gradeId).then(toGrade);
     }
 
     public async newGrade(grade: Grade): Promise<Grade> {
         const newGrade = toGradeDTO(grade);
-        return await this.gradeRepository.create(newGrade)
-            .then((createdGrade: GradeDTO) => toGrade(createdGrade));
+        return await this.gradeRepository.create(newGrade).then(toGrade);
     }
 
     public async updateGrade(grade: Grade): Promise<Grade> {
         const newGrade = toGradeDTO(grade);
-        return await this.gradeRepository.update(newGrade)
-            .then((createdGrade: GradeDTO) => toGrade(createdGrade));
+        return await this.gradeRepository.update(newGrade).then(toGrade);
     }
 
     public async deleteGrade(gradeId: string): Promise<Grade> {
-        return await this.gradeRepository.delete(gradeId)
-            .then((g: GradeDTO) => toGrade(g));
+        return await this.gradeRepository.delete(gradeId).then(toGrade);
     }
 
 }

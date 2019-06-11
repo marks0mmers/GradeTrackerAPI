@@ -31,9 +31,7 @@ export class UserManagerImpl implements UserManager {
             throw new UserException("User Already Exists with the email: " + user.email);
         }
         createdUser.setPassword(user.password);
-        const newUser = await this.userRepository.newUser(this.toUserDto(createdUser)).then((u: UserDatabaseDTO) => {
-            return this.toUser(u);
-        });
+        const newUser = await this.userRepository.newUser(this.toUserDto(createdUser)).then(this.toUser);
         const defaultRole = await this.roleManager.newRole(new Role("user", newUser.id));
         newUser.roles = [];
         newUser.roles.push(defaultRole);
@@ -45,14 +43,12 @@ export class UserManagerImpl implements UserManager {
         userToEdit.email = user.email;
         userToEdit.firstName = user.firstName;
         userToEdit.lastName = user.lastName;
-        return await this.userRepository.editUser(userToEdit).then((u: UserDatabaseDTO) => {
-            return this.toUser(u);
-        });
+        return await this.userRepository.editUser(userToEdit).then(this.toUser);
     }
 
     public async login(loginData: LoginDTO): Promise<User> {
         return await this.userRepository.getUserByEmail(loginData.email)
-            .then((u: UserDatabaseDTO) => this.toUser(u))
+            .then(this.toUser)
             .then((u: User) => {
                 if (u.validatePassword(loginData.password)) {
                     return u;
@@ -63,15 +59,13 @@ export class UserManagerImpl implements UserManager {
     }
 
     public async getUser(id: string): Promise<User> {
-        return await this.userRepository.getUser(id).then((u: UserDatabaseDTO) => {
-            return this.toUser(u);
-        });
+        return await this.userRepository.getUser(id).then(this.toUser);
     }
 
     public async getUsers(): Promise<User[]> {
-        return await this.userRepository.getUsers().then((users: UserDatabaseDTO[]) => users.map((u: UserDatabaseDTO) => {
-            return this.toUser(u);
-        }));
+        return await this.userRepository.getUsers().then((users) => users
+            .map(this.toUser)
+        );
     }
 
     private toUserDto(user: User): UserDatabaseDTO {

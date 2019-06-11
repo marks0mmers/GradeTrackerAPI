@@ -19,27 +19,24 @@ export class RoleManagerImpl implements RoleManager {
     private roleRepository: RoleRepository;
 
     public async getRolesForUser(userId: string): Promise<Role[]> {
-        return await this.roleRepository.findAll()
-            .then((dtos: RoleDTO[]) => dtos.map((dto) => toRole(dto)))
-            .then((roles: Role[]) => roles.filter((role: Role) => role.userId === userId));
+        return await this.roleRepository.findAll().then((roles) => roles
+            .map(toRole)
+            .filter((r) => r.userId === userId)
+        );
     }
     public async getRole(roleId: string): Promise<Role> {
-        return await this.roleRepository.find(roleId)
-            .then((role: RoleDTO) => toRole(role));
+        return await this.roleRepository.find(roleId).then(toRole);
     }
     public async newRole(role: Role): Promise<Role> {
         const newRole = toRoleDTO(role);
-        return await this.roleRepository.create(newRole)
-            .then((createdRole: RoleDTO) => toRole(createdRole));
+        return await this.roleRepository.create(newRole).then(toRole);
     }
     public async updateRole(role: Role): Promise<Role> {
         const updated = toRoleDTO(role);
-        return await this.roleRepository.update(updated)
-            .then((updatedRole: RoleDTO) => toRole(updatedRole));
+        return await this.roleRepository.update(updated).then(toRole);
     }
     public async deleteRole(roleId: string): Promise<Role> {
-        return await this.roleRepository.delete(roleId)
-            .then((role: RoleDTO) => toRole(role));
+        return await this.roleRepository.delete(roleId).then(toRole);
     }
 
 }

@@ -21,14 +21,16 @@ export class ViewRequestManagerImpl implements ViewRequestManager {
     private viewRequestRepository: ViewRequestRepository;
 
     public async getAllForReceiver(receiverId: string): Promise<ViewRequest[]> {
-        return await this.viewRequestRepository.findAll()
-            .then((requests) => requests.map((r) => toViewRequest(r)))
-            .then((requests) => requests.filter((r) => r.receiver === receiverId));
+        return await this.viewRequestRepository.findAll().then((requests) => requests
+            .map(toViewRequest)
+            .filter((r) => r.receiver === receiverId)
+        );
     }
     public async  getAllForRequester(requesterId: string): Promise<ViewRequest[]> {
-        return await this.viewRequestRepository.findAll()
-            .then((requests) => requests.map((r) => toViewRequest(r)))
-            .then((requests) => requests.filter((r) => r.requester === requesterId));
+        return await this.viewRequestRepository.findAll().then((requests) => requests
+            .map(toViewRequest)
+            .filter((r) => r.requester === requesterId)
+        );
     }
     public async sendUserViewRequest(currentUserId: string, userToRequest: string): Promise<ViewRequest> {
         const newRequest: ViewRequestDTO = {
@@ -37,8 +39,7 @@ export class ViewRequestManagerImpl implements ViewRequestManager {
             status: ViewRequestStatus.SENT
         };
 
-        return await this.viewRequestRepository.create(newRequest)
-            .then((request) => toViewRequest(request));
+        return await this.viewRequestRepository.create(newRequest).then(toViewRequest);
     }
     public async approveViewRequest(requestId: string, currentUserId: string): Promise<ViewRequest> {
         const requestToApprove = await this.viewRequestRepository.find(requestId);
@@ -49,8 +50,7 @@ export class ViewRequestManagerImpl implements ViewRequestManager {
 
         requestToApprove.status = ViewRequestStatus.APPROVED;
 
-        return await this.viewRequestRepository.update(requestToApprove)
-            .then((request) => toViewRequest(request));
+        return await this.viewRequestRepository.update(requestToApprove).then(toViewRequest);
     }
     public async denyViewRequest(requestId: string, currentUserId: string): Promise<ViewRequest> {
         const requestToApprove = await this.viewRequestRepository.find(requestId);
@@ -61,8 +61,7 @@ export class ViewRequestManagerImpl implements ViewRequestManager {
 
         requestToApprove.status = ViewRequestStatus.DENIED;
 
-        return await this.viewRequestRepository.update(requestToApprove)
-            .then((request) => toViewRequest(request));
+        return await this.viewRequestRepository.update(requestToApprove).then(toViewRequest);
     }
 
 }

@@ -20,41 +20,34 @@ export class CourseManagerImpl implements CourseManager {
     private courseRepository: CourseRepository;
 
     public async getCourses(): Promise<Course[]> {
-        return await this.courseRepository.findAll().then((c: CourseDTO[]) => c.map((course: CourseDTO) => {
-            return toCourse(course);
-        }));
+        return await this.courseRepository.findAll().then((courses) => courses
+            .map(toCourse)
+        );
     }
 
     public async getCoursesByUser(id: string): Promise<Course[]> {
-        return await this.courseRepository.findByUser(id).then((c: CourseDTO[]) => {
-            return c.map((course: CourseDTO) => toCourse(course));
-        });
+        return await this.courseRepository.findAll().then((courses) => courses
+            .map(toCourse)
+            .filter((c) => c.userId === id)
+        );
     }
 
     public async getCourse(id: string): Promise<Course> {
-        return await this.courseRepository.find(id).then((c: CourseDTO) => {
-            return toCourse(c);
-        });
+        return await this.courseRepository.find(id).then(toCourse);
     }
 
     public async createCourse(course: Course): Promise<Course> {
         const courseDTO = toCourseDTO(course);
-        return await this.courseRepository.create(courseDTO).then((c: CourseDTO) => {
-            return toCourse(c);
-        });
+        return await this.courseRepository.create(courseDTO).then(toCourse);
     }
 
     public async updateCourse(course: Course): Promise<Course> {
         const courseDTO = toCourseDTO(course);
-        return await this.courseRepository.update(courseDTO).then((c: CourseDTO) => {
-            return toCourse(c);
-        });
+        return await this.courseRepository.update(courseDTO).then(toCourse);
     }
 
     public async deleteCourse(id: string): Promise<Course> {
-        return await this.courseRepository.delete(id).then((c: CourseDTO) => {
-            return toCourse(c);
-        });
+        return await this.courseRepository.delete(id).then(toCourse);
     }
 
 }
