@@ -6,7 +6,8 @@ import { authMiddleware } from "../auth/auth.middleware";
 import TYPES from "../config/types";
 import { CourseException } from "../exceptions/CourseException";
 import { UserException } from "../exceptions/UserException";
-import { userHasRole } from "../role/role.middleware";
+import { GradeCategoryManager } from "../grade-category/grade-category.manager";
+import { GradeCategory } from "../grade-category/grade-category.model";
 import { UserManager } from "../user/user.manager";
 import { User } from "../user/user.model";
 import { CourseManager } from "./course.manager";
@@ -17,6 +18,9 @@ export class CourseController {
 
     @inject(TYPES.CourseManager)
     private courseManager: CourseManager;
+
+    @inject(TYPES.GradeCategoryManager)
+    private gradeCategoryManager: GradeCategoryManager;
 
     @inject(TYPES.UserManager)
     private userManager: UserManager;
@@ -101,11 +105,14 @@ export class CourseController {
 
     @httpGet("/user/:userId")
     public async getCoursesByUser(req: RequestWithUser & Request, res: Response, next: NextFunction) {
-        const { userToGet } = req.params;
+        const userToGet = req.params.userId;
         const currentUser = req.user._id.toString();
         try {
             const courses = await this.courseManager.getCoursesByUser(currentUser, userToGet);
-            res.json(courses);
+            if (courses) {
+                const categories = await this.gradeCategoryManager.getAllForUser(userToGet);
+                res.json(categories);
+            }
         } catch {
             next(new CourseException("Cannot get courses for user: " + userToGet));
         }
