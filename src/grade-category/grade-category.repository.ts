@@ -20,7 +20,10 @@ export class GradeCategoryRepositoryImpl implements GradeCategoryRepository {
     }
 
     public async find(id: string): Promise<GradeCategoryDTO> {
-        const gradeCategory = await gradeCategoryDatabase.findById(id).populate("grades").exec();
+        const gradeCategory = await gradeCategoryDatabase
+            .findById(id)
+            .populate("grades")
+            .exec();
         return gradeCategory;
     }
 
@@ -29,7 +32,10 @@ export class GradeCategoryRepositoryImpl implements GradeCategoryRepository {
     }
 
     public async update(gradeCategoryDTO: GradeCategoryDTO): Promise<GradeCategoryDTO> {
-        return await gradeCategoryDatabase.findByIdAndUpdate(gradeCategoryDTO._id, gradeCategoryDTO, (err: Error, res: GradeCategoryDocument) => res);
+        return await gradeCategoryDatabase
+            .findByIdAndUpdate(gradeCategoryDTO._id, gradeCategoryDTO, (err: Error, res: GradeCategoryDocument) => res)
+            .populate("grades")
+            .exec();
     }
 
     public async delete(id: string): Promise<GradeCategoryDTO> {
