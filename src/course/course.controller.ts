@@ -104,14 +104,14 @@ export class CourseController {
     }
 
     @httpGet("/user/:userId")
-    public async getCoursesByUser(req: RequestWithUser & Request, res: Response, next: NextFunction) {
+    public async getCoursesAndCategoriesByUser(req: RequestWithUser & Request, res: Response, next: NextFunction) {
         const userToGet = req.params.userId;
         const currentUser = req.user._id.toString();
         try {
             const courses = await this.courseManager.getCoursesByUser(currentUser, userToGet);
             if (courses) {
                 const categories = await this.gradeCategoryManager.getAllForUser(userToGet);
-                res.json(categories);
+                res.json({courses, categories});
             }
         } catch {
             next(new CourseException("Cannot get courses for user: " + userToGet));
