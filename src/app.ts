@@ -19,24 +19,31 @@ import "./view-request/view-request.controller";
 
 export class App {
 
-    private app: Application;
+    private _app: Application;
 
-    constructor() {
-        this.config();
+    private constructor() {}
+
+    static async build() {
+        // noinspection JSIgnoredPromiseFromCall
+        const app = new App();
+
+        await app.config();
+
+        return app;
     }
 
     public listen() {
         // Listen on port 8000 for calls
-        this.app.listen(process.env.PORT || 8000, () => {
+        this._app.listen(process.env.PORT || 8000, () => {
             // tslint:disable-next-line:no-console
             console.log(`Grade Tracker API listening on port ${process.env.PORT || 8000}!`);
         });
     }
 
-    private config() {
+    private async config() {
         // Connect to mongoose database
         // tslint:disable-next-line:max-line-length
-        connect(process.env.MONGODB_URI || "mongodb://host.docker.internal:27017", { useNewUrlParser: true });
+        await connect(process.env.MONGODB_URI || "mongodb://localhost:27017/grade-tracker", { useNewUrlParser: true });
 
         // Configure environment variables
         dotenv.config();
@@ -52,7 +59,7 @@ export class App {
             // Enable cross site access
             app.use(cors());
 
-            // Protect app from well known HTTP vulnerabilies
+            // Protect app from well known HTTP vulnerabilities
             app.use(helmet());
 
             // Add simple console logging with dev
@@ -62,7 +69,7 @@ export class App {
         server.setErrorConfig((app: Application) => {
             app.use(errorMiddleware);
         });
-        this.app = server.build();
+        this._app = server.build();
     }
 
 }

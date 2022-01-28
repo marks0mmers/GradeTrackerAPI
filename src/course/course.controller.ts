@@ -7,7 +7,6 @@ import TYPES from "../config/types";
 import { CourseException } from "../exceptions/CourseException";
 import { UserException } from "../exceptions/UserException";
 import { GradeCategoryManager } from "../grade-category/grade-category.manager";
-import { GradeCategory } from "../grade-category/grade-category.model";
 import { UserManager } from "../user/user.manager";
 import { User } from "../user/user.model";
 import { CourseManager } from "./course.manager";
